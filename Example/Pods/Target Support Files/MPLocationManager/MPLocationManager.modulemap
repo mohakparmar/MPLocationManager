@@ -1,0 +1,6 @@
+framework module MPLocationManager {
+  umbrella header "MPLocationManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

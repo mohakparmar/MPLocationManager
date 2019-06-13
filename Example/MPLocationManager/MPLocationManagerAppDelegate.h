@@ -7,9 +7,13 @@
 //
 
 @import UIKit;
+#import "FileObject.h"
+
 
 @interface MPLocationManagerAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, retain) UINavigationController *nav;
+
 
 @end
