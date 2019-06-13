@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'MPLocationManager_Example' do
+  pod 'MPLocationManager', :path => '../'
+
+  target 'MPLocationManager_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
