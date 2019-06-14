@@ -65,6 +65,9 @@
 /** To Stop Updating Location */
 - (void)StopUpdatingLocation;
 
+/** To get current battery life */
+-(double)getCurrentBatteryLife;
+
 -(void)checkLocationPermissionStatus;
 
 #pragma mark - To Get Currentlocation

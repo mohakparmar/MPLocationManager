@@ -292,11 +292,23 @@ static id _sharedInstance;
     _locationManager.pausesLocationUpdatesAutomatically = pauses;
 }
 
+-(double)getCurrentBatteryLife {
+#if IOS_SIMULATOR
+    MPLMLog(@"It's an iOS Simulator");
+#else
+    UIDevice *myDevice = [UIDevice currentDevice];
+    [myDevice setBatteryMonitoringEnabled:YES];
+    double batLeft = (double)[myDevice batteryLevel] * 100;
+    return (double)batLeft;
+#endif
+}
+
 #pragma mark CLLocationManagerDelegate methods
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     CLLocation *mostRecentLocation = [locations lastObject];
     self.currentLocation = mostRecentLocation;
 }
+
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     MPLMLog(@"Location services error: %@", [error localizedDescription]);
@@ -309,7 +321,7 @@ static id _sharedInstance;
     if ((_currentLocation.coordinate.latitude == objMPLocation.MPLocation.coordinate.latitude && _currentLocation.coordinate.longitude == objMPLocation.MPLocation.coordinate.longitude) && self.objCurrentAccuracy && !_mainForceSend) {
         return;
     }
-    objMPLocation = [MPLocationObject initWithCLLocation:self.currentLocation Accuracy:self.objCurrentAccuracy UpdateTime:self.objMPLocationTime];
+    objMPLocation = [MPLocationObject initWithCLLocation:self.currentLocation Accuracy:self.objCurrentAccuracy UpdateTime:self.objMPLocationTime battery:[self getCurrentBatteryLife]];
     [self.delegate SendLocation:objMPLocation];
     self.nextLocationUpdateAvailable = (int)self.timeInterval;
 }
@@ -397,7 +409,12 @@ static id _sharedInstance;
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     [self checkLocationPermissionStatus];
 }
-    
+
+-(void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+    [self.delegate SendError:MPLocationStatusPause];
+}
+
+
 @end
 
 

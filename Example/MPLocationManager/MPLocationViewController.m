@@ -23,7 +23,11 @@
     [MPLocationManager sharedInstance].delegate = self;
     [[MPLocationManager sharedInstance] checkLocationPermissionStatus];
     [[MPLocationManager sharedInstance] SetMaxAccuracy:kMPHorizontalAccuracyNear];
-    [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale30Seconds];
+//    [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale30Seconds];
+    
+    double i = [[MPLocationManager sharedInstance] getCurrentBatteryLife];
+    NSLog(@"%f", i);
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -111,6 +115,10 @@
         }
         case MPLocationStatusErrorInAddressFetched: {
             lblCountDown.text = @"Error in fetching address. Please try again.";
+            break;
+        }
+        case MPLocationStatusPause: {
+            [btnStartUpdatingLocation setTitle:@"Start Updating Location" forState:YES];
             break;
         }
         default:

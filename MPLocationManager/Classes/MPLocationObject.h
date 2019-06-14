@@ -15,8 +15,10 @@
 @property (nonatomic, assign) MPLocationUpdateTime MPUpdateTime;
 @property (nonatomic, retain) NSDate *MPTime;
 @property (nonatomic, retain) NSArray *MPPlaceMarks;
+@property (nonatomic, assign) CLLocationSpeed speed;
+@property (nonatomic, assign) double battery;
 
-+(MPLocationObject *)initWithCLLocation:(CLLocation *)location Accuracy:(MPLocationAccuracy)accuracy UpdateTime:(MPLocationUpdateTime)updateTime;
++(MPLocationObject *)initWithCLLocation:(CLLocation *)location Accuracy:(MPLocationAccuracy)accuracy UpdateTime:(MPLocationUpdateTime)updateTime battery:(double)batteryLife;
     
 @end
 

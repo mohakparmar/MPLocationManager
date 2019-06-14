@@ -111,6 +111,8 @@ typedef NS_ENUM(NSInteger, MPLocationStatus) {
     /** User has turned off location services device-wide (for all apps) from the system Settings app. */
     MPLocationStatusServicesDisabled,
     /** An error occurred while using the system location services. */
-    MPLocationStatusError
+    MPLocationStatusError,
+    /** Pause location from location manager object. */
+    MPLocationStatusPause
 };
 
