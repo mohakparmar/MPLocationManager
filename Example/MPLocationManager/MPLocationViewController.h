@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "FileObject.h"
 #import <MapKit/MapKit.h>
+#import "WSManager.h"
 
 @interface MPLocationViewController : UIViewController
 {
