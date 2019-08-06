@@ -20,20 +20,18 @@
     [super viewDidLoad];
 
     self.navigationController.navigationBarHidden = YES;
-    
+    // @"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"
     [MPLocationManager sharedInstance].delegate = self;
+    [[MPLocationManager sharedInstance] setName:[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"]];
+    [[MPLocationManager sharedInstance] setToken:@"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"];
     [[MPLocationManager sharedInstance] checkLocationPermissionStatus];
-    [[MPLocationManager sharedInstance] SetMaxAccuracy:kMPHorizontalAccuracyNear];
-    [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale30Seconds];
-    [[MPLocationManager sharedInstance] setPausesLocationUpdatesAutomatically:NO];
-    
-    double i = [[MPLocationManager sharedInstance] getCurrentBatteryLife];
-    NSLog(@"%f", i);
+    [[MPLocationManager sharedInstance] checkLocationUpdateStarted];
+//    double i = [[MPLocationManager sharedInstance] getCurrentBatteryLife];
+//    NSLog(@"%f", i);
     
     if (![[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"] isKindOfClass:[NSString class]]) {
         [self showEmployeeCodeAlerr];
     }
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -51,16 +49,17 @@
     NSLog(@"%@", location);
     
    // btnGeoCoding.hidden = NO;
-    
     _lblCurrentLocation.text = [NSString stringWithFormat:@"%@", location.MPLocation];
     
     _objLocation = [[MPLocationObject alloc] init];
     _objLocation = location;
     
-    [self WSForUpdateLocation];
-    
     [self setLocationPin];
     [self zoomToLocation];
+}
+
+-(void)sendServiceSuccessBlock:(NSDictionary *)response {
+    NSLog(@"%@", response);
 }
 
 -(void)setLocationPin {
@@ -80,8 +79,9 @@
 
 -(void)SendError:(MPLocationStatus)ErrorCode {
     switch (ErrorCode) {
-        case MPLocationStatusTimedOut: {
-            _lblCurrentLocation.text = @"Time Out";
+        case MPLocationStatusTripAlreadyStarted: {
+            [[MPLocationManager sharedInstance] StartUpdatingLocation:self];
+            [btnStartUpdatingLocation setTitle:@"Stop Updating Location" forState:UIControlStateNormal];
             break;
         }
         case MPLocationStatusServicesNotDetermined: {
@@ -265,37 +265,6 @@
     }
 }
 
--(void)WSForUpdateLocation {
-    NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-    NSURL *url = [NSURL URLWithString:@"http://204.141.208.30:82/api/Tracking"];
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
-    
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"name"] forKey:@"EmployeeCode"];
-    [dict setValue:[NSString stringWithFormat:@"%f", _objLocation.MPLocation.coordinate.latitude] forKey:@"Latitude"];
-    [dict setValue:[NSString stringWithFormat:@"%f", _objLocation.MPLocation.coordinate.longitude] forKey:@"Longitude"];
-    [dict setValue:[NSString stringWithFormat:@"%f", _objLocation.MPLocation.speed] forKey:@"Speed"];
-    [dict setValue:[NSString stringWithFormat:@"%f", _objLocation.battery] forKey:@"Battery"];
-    [dict setValue:[NSString stringWithFormat:@"%ld", (long)_objLocation.MPAccuracy] forKey:@"Accuracy"];
-   
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
-    [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [urlRequest setHTTPBody:data];
-    
-    //Create task
-    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        //Handle your response here
-        NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-        NSLog(@"%@",responseDict);
-    }];
-    [dataTask resume];
-}
-
 -(void)showEmployeeCodeAlerr {
     UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"EMPLOYEE CODE"
                                                                               message: @"Please enter your employee code"
@@ -313,13 +282,13 @@
         if ([namefield.text isEqualToString:@""]) {
             [self showEmployeeCodeAlerr];
         } else {
+            [[MPLocationManager sharedInstance] setName:namefield.text];
             [[NSUserDefaults standardUserDefaults] setValue:namefield.text forKey:@"name"];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
     }]];
     [self presentViewController:alertController animated:YES completion:nil];
 }
-
 
 @end
 

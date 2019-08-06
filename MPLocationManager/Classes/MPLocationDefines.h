@@ -72,7 +72,6 @@ typedef NS_ENUM(NSInteger, MPLocationAccuracy) {
 /** Location Update Time */
 typedef NS_ENUM(NSInteger, MPLocationUpdateTime) {
     MPLocationUpdateTimeNone = 0,
-    
     /** received within the last 10 minutes. */
     MPLocationUpdateTime10Minutes,
     /** received within the last 5 minutes. */
@@ -113,6 +112,28 @@ typedef NS_ENUM(NSInteger, MPLocationStatus) {
     /** An error occurred while using the system location services. */
     MPLocationStatusError,
     /** Pause location from location manager object. */
-    MPLocationStatusPause
+    MPLocationStatusPause,
+    /** Name not available. */
+    MPLocationStatusErrorDataValidation,
+    /** Token Error. */
+    MPLocationStatuszErrorToken,
+    /** Permission Denied. */
+    MPLocationStatusErrorPermissionDenied,
+    /** Madnatory Error. */
+    MPLocationStatusErrorDuplicateError,
+    /** data not found Error. */
+    MPLocationStatusErrorDataNotFound,
+    /** Try catch Error. */
+    MPLocationStatusErrorTryCatch,
+    /** Bug Error. */
+    MPLocationStatusErrorBug,
+    /** General Error. */
+    MPLocationStatusErrorGeneralError,
+    /** Authentiation Error. */
+    MPLocationStatusErrorAuthenticationError,
+    /** Third Party Error. */
+    MPLocationStatusErrorThirdPartyError,
+    /** Third Party Error. */
+    MPLocationStatusTripAlreadyStarted
 };
 

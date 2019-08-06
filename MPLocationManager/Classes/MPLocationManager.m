@@ -45,6 +45,12 @@
 @property (nonatomic, retain) NSTimer *timerForCounter;
 /** Count down for next location update. */
 @property (nonatomic, assign) BOOL mainCountDown;
+/* Variable for name */
+@property (nonatomic, retain) NSString *str_name;
+/* Token */
+@property (nonatomic, retain) NSString *str_token;
+/* Start Stop Flag */
+@property (nonatomic, retain) NSString *str_start_stop_status;
 
 @end
 
@@ -88,6 +94,17 @@ static id _sharedInstance;
     return self;
 }
 
+/** Set token */
+- (void)setToken:(NSString *)str_token {
+    self.str_token = str_token;
+}
+
+/** Set name */
+- (void)setName:(NSString *)str_name {
+    self.str_name = str_name;
+}
+
+
 /** Requests permission to use location services on devices with iOS 8+. */
 - (void)requestAuthorizationIfNeeded {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
@@ -128,7 +145,8 @@ static id _sharedInstance;
         if (needRequestAlways) {
             [self.locationManager requestAlwaysAuthorization];
         } else if (needRequestWhenInUse) {
-            [self.locationManager requestWhenInUseAuthorization];
+           // [self.locationManager requestWhenInUseAuthorization];
+            [self.locationManager requestAlwaysAuthorization];
         } else {
             if (isiOSVersion7to10) {
                 // At least one of the keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription MUST be present in the Info.plist file to use location services on iOS 8+.
@@ -146,11 +164,18 @@ static id _sharedInstance;
 -(void)StartUpdatingLocation:(id)delegate {
     self.delegate = delegate;
     [self checkLocationPermissionStatus];
+    
+    [[MPLocationManager sharedInstance] SetMaxAccuracy:kMPHorizontalAccuracyModerate];
+    [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale5Seconds];
+    [[MPLocationManager sharedInstance] setPausesLocationUpdatesAutomatically:NO];
+    [[MPLocationManager sharedInstance] setBackgroundLocationUpdate:YES];
+    [[MPLocationManager sharedInstance] setShowsBackgroundLocationIndicator:YES];
+    [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
-    if (_mainCountDown) {
-        _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
-    }
+//    _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
+//    if (_mainCountDown) {
+//        _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
+//    }
 }
 
 -(void)timerCounter {
@@ -159,7 +184,6 @@ static id _sharedInstance;
     } else {
         self.nextLocationUpdateAvailable--;
     }
-    [self.delegate sendTimerCount:[NSString stringWithFormat:@"%d", self.nextLocationUpdateAvailable]];
 }
 
 - (void)SetMaxAccuracy:(MPLocationAccuracy)maxAccuracy {
@@ -237,13 +261,14 @@ static id _sharedInstance;
     
     if ([self.timer isValid]) {
         [self.timer invalidate];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
+        //_timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
         if (_mainCountDown) {
             self.nextLocationUpdateAvailable = (int)self.timeInterval;
             [_timerForCounter invalidate];
             _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
         }
     }
+    
 }
 
 - (void)enableForceSend:(BOOL)forceSend {
@@ -255,7 +280,7 @@ static id _sharedInstance;
     if ([self.timer isValid] && _mainCountDown) {
         [self.timer invalidate];
         [_timerForCounter invalidate];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
+     //   _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
         _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
         [self.delegate SendError:MPLocationStatusTimerStart];
     } else {
@@ -268,7 +293,9 @@ static id _sharedInstance;
 - (void)StopUpdatingLocation {
     [_timer invalidate];
     [_timerForCounter invalidate];
+    [self WSForStopUpdateLocation:objMPLocation];
     [self.delegate SendError:MPLocationStatusTimerStop];
+    [self.locationManager stopMonitoringSignificantLocationChanges];
     [self.locationManager stopUpdatingLocation];
 }
 
@@ -307,8 +334,14 @@ static id _sharedInstance;
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     CLLocation *mostRecentLocation = [locations lastObject];
     self.currentLocation = mostRecentLocation;
+    [self sendLocationObjectWithParameter];
 }
 
+-(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    self.currentLocation = newLocation;
+    [self sendLocationObjectWithParameter];
+}
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     MPLMLog(@"Location services error: %@", [error localizedDescription]);
@@ -318,13 +351,186 @@ static id _sharedInstance;
     if (_currentLocation == nil) {
         return;
     }
-    if ((_currentLocation.coordinate.latitude == objMPLocation.MPLocation.coordinate.latitude && _currentLocation.coordinate.longitude == objMPLocation.MPLocation.coordinate.longitude) && self.objCurrentAccuracy && !_mainForceSend) {
-        return;
-    }
+//    if ((_currentLocation.coordinate.latitude == objMPLocation.MPLocation.coordinate.latitude && _currentLocation.coordinate.longitude == objMPLocation.MPLocation.coordinate.longitude) && self.objCurrentAccuracy && !_mainForceSend) {
+//        return;
+//    }
     objMPLocation = [MPLocationObject initWithCLLocation:self.currentLocation Accuracy:self.objCurrentAccuracy UpdateTime:self.objMPLocationTime battery:[self getCurrentBatteryLife]];
-    [self.delegate SendLocation:objMPLocation];
+ //   [self.delegate SendLocation:objMPLocation];
     self.nextLocationUpdateAvailable = (int)self.timeInterval;
+    if ([self.str_token isEqualToString:@""]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if ([self.str_name isEqualToString:@""]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else {
+        if ([_str_start_stop_status isEqualToString:@"Start"] || [_str_start_stop_status isEqualToString:@"Tracking"]) {
+            [self WSForUpdateLocation:objMPLocation];
+        } else {
+            [self WSForStopUpdateLocation:objMPLocation];
+        }
+    }
 }
+
+-(void)WSForUpdateLocation:(MPLocationObject *)objLocation {
+    NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+    NSURL *url = [NSURL URLWithString:@"http://204.141.208.30:82/api/expense-tracker/track/"];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setValue:self.str_name forKey:@"EmployeeCode"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.MPLocation.coordinate.latitude] forKey:@"Latitude"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.MPLocation.coordinate.longitude] forKey:@"Longitude"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.MPLocation.speed] forKey:@"Speed"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.battery] forKey:@"Battery"];
+    [dict setValue:[NSString stringWithFormat:@"%ld", (long)objLocation.MPAccuracy] forKey:@"Accuracy"];
+    [dict setValue:_str_start_stop_status forKey:@"Event"];
+
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
+    [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [urlRequest setValue:self.str_token forHTTPHeaderField:@"Authorization"];
+    [urlRequest setHTTPBody:data];
+    
+    //Create task
+    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        //Handle your response here
+        NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+        NSLog(@"%@",responseDict);
+        
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+        self->_str_start_stop_status = @"Tracking";
+        if ([httpResponse statusCode] == 500) {
+            NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+            [self sendErrorCode:str_error dict:responseDict];
+            if ([str_error isEqualToString:@"50004"]) {
+                [self WSForStopUpdateLocation:objLocation];
+            }
+        } else {
+            if ([httpResponse statusCode] == 401) {
+                [self.delegate SendError:MPLocationStatusErrorAuthenticationError];
+            }
+            [self.delegate sendServiceSuccessBlock:responseDict];
+            [self.delegate SendLocation:self->objMPLocation];
+        }
+    }];
+    [dataTask resume];
+}
+
+-(void)WSForStopUpdateLocation:(MPLocationObject *)objLocation {
+    NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+    NSURL *url = [NSURL URLWithString:@"http://204.141.208.30:82/api/expense-tracker/track/"];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setValue:self.str_name forKey:@"EmployeeCode"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.MPLocation.coordinate.latitude] forKey:@"Latitude"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.MPLocation.coordinate.longitude] forKey:@"Longitude"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.MPLocation.speed] forKey:@"Speed"];
+    [dict setValue:[NSString stringWithFormat:@"%f", objLocation.battery] forKey:@"Battery"];
+    [dict setValue:[NSString stringWithFormat:@"%ld", (long)objLocation.MPAccuracy] forKey:@"Accuracy"];
+    [dict setValue:@"Stop" forKey:@"Event"];
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
+    [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [urlRequest setValue:self.str_token forHTTPHeaderField:@"Authorization"];
+    [urlRequest setHTTPBody:data];
+    
+    //Create task
+    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        //Handle your response here
+        self->_str_start_stop_status = @"Start";
+
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+
+        if ([httpResponse statusCode] == 500) {
+            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+            NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+            [self sendErrorCode:str_error dict:responseDict];
+        } else {
+            if ([httpResponse statusCode] == 401) {
+                [self.delegate SendError:MPLocationStatusErrorAuthenticationError];
+            }
+            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+            [self.delegate sendServiceSuccessBlock:responseDict];
+            [self.delegate SendLocation:self->objMPLocation];
+        }
+    }];
+    [dataTask resume];
+}
+
+- (void)checkLocationUpdateStarted {
+    
+    if ([self.str_token isEqualToString:@""]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if ([self.str_name isEqualToString:@""]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else {
+        NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+        NSURL *url = [NSURL URLWithString:@"http://204.141.208.30:82/api/expense-tracker/has-trip-started/"];
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+        
+        [urlRequest setHTTPMethod:@"GET"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:self.str_token forHTTPHeaderField:@"Authorization"];
+        
+        //Create task
+        NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            //Handle your response here
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+            if ([httpResponse statusCode] == 500) {
+                NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+                [self sendErrorCode:str_error dict:responseDict];
+            } else {
+                NSString *str_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Status"]];
+                if ([str_code isEqualToString:@"1"]) {
+                    self.str_start_stop_status = @"Tracking";
+                    [self.delegate SendError:MPLocationStatusTripAlreadyStarted];
+                }
+            }
+        }];
+        [dataTask resume];
+    }
+}
+
+
+-(void)sendErrorCode:(NSString *)str_code dict:(NSDictionary *)dictionary {
+    
+    if ([str_code isEqualToString:@"50000"]) {
+        [self.delegate SendError:MPLocationStatusErrorPermissionDenied];
+    } else if ([str_code isEqualToString:@"50001"]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if ([str_code isEqualToString:@"50002"]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if ([str_code isEqualToString:@"50003"]) {
+        [self.delegate SendError:MPLocationStatusErrorDuplicateError];
+    } else if ([str_code isEqualToString:@"50004"]) {
+        [self.delegate SendError:MPLocationStatusErrorDataNotFound];
+    } else if ([str_code isEqualToString:@"50005"]) {
+        [self.delegate SendError:MPLocationStatusErrorDataNotFound];
+    } else if ([str_code isEqualToString:@"50006"]) {
+        [self.delegate SendError:MPLocationStatusErrorTryCatch];
+    } else if ([str_code isEqualToString:@"50007"]) {
+        [self.delegate SendError:MPLocationStatusErrorBug];
+    } else if ([str_code isEqualToString:@"50008"]) {
+        [self.delegate SendError:MPLocationStatusErrorGeneralError];
+    } else if ([str_code isEqualToString:@"50009"]) {
+        [self.delegate SendError:MPLocationStatusErrorAuthenticationError];
+    } else if ([str_code isEqualToString:@"50010"]) {
+        [self.delegate SendError:MPLocationStatusErrorThirdPartyError];
+    }
+    [self.delegate sendServiceSuccessBlock:dictionary];
+}
+
 
 /**  Returns the most recent current location, or nil if the current location is unknown, invalid, or stale. */
 - (CLLocation *)currentLocation {
@@ -335,7 +541,7 @@ static id _sharedInstance;
             _currentLocation = nil;
         }
     }
-    // Location is either nil or valid at this point, return it
+   // Location is either nil or valid at this point, return it
     return _currentLocation;
 }
 

@@ -30,10 +30,10 @@
 @protocol MPLocationDelegate <NSObject>
 
 @required
--(void)SendLocation:(MPLocationObject *)location;
+-(void)sendServiceSuccessBlock:(NSDictionary *)response;
 
 @optional
--(void)sendTimerCount:(NSString *)str_count_down;
+-(void)SendLocation:(MPLocationObject *)location;
 -(void)SendError:(MPLocationStatus)ErrorCode;
 
 @end
@@ -62,6 +62,12 @@
 /** Countdown on each seconds */
 - (void)enableCoundown:(BOOL)enableCoundown;
 
+/** Set token */
+- (void)setToken:(NSString *)str_token;
+
+/** Set name */
+- (void)setName:(NSString *)str_name;
+
 /** To Stop Updating Location */
 - (void)StopUpdatingLocation;
 
@@ -83,6 +89,9 @@
 
 /** To pause and start location services */
 - (void)setPausesLocationUpdatesAutomatically:(BOOL) pauses;
+
+/** To check location update is started */
+- (void)checkLocationUpdateStarted;
 
 -(void)getAddress:(MPLocationObject *)object;
 
