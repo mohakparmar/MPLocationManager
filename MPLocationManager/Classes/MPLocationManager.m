@@ -337,12 +337,6 @@ static id _sharedInstance;
     [self sendLocationObjectWithParameter];
 }
 
--(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
-{
-    self.currentLocation = newLocation;
-    [self sendLocationObjectWithParameter];
-}
-
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     MPLMLog(@"Location services error: %@", [error localizedDescription]);
 }
