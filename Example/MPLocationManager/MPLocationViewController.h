@@ -55,7 +55,6 @@
 - (IBAction)btnStartUpdatingLocationClick:(id)sender;
 - (IBAction)btnGeoCodingClick:(id)sender;
 
--(void)startUpdate;
 
 @end
 
