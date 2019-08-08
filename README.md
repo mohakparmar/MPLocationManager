@@ -49,12 +49,38 @@ Starting with iOS 8, you must provide a description for how your app uses locati
 
 Starting with iOS 11, you must provide a description for how your app uses location services by setting a string for the key NSLocationAlwaysAndWhenInUseUsageDescription in your app's Info.plist file.
 
+**App Trasport Security**
+
+As SDK contain service calls you need to add app trasport security in your application. 
+
+Read detail about trasport security : https://developers.google.com/admob/ios/app-transport-security
+
+```
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    <key>NSAllowsArbitraryLoadsForMedia</key>
+    <true/>
+    <key>NSAllowsArbitraryLoadsInWebContent</key>
+    <true/>
+</dict>
+```
+
 ## Methods
+
+**Please set up delegate method and add your key for authorization and employee name with below methods**
+
+```
+[MPLocationManager sharedInstance].delegate = self;
+[[MPLocationManager sharedInstance] setName:@"Name_Of_Employee"];
+[[MPLocationManager sharedInstance] setToken:@"eyJzIjoxMj**************gdfgrgDrfd45345"];
+```
 
 **Start getting location using single line code :**
 
 ```
- [[MPLocationManager sharedInstance] StartUpdatingLocation:self];
+[[MPLocationManager sharedInstance] StartUpdatingLocation:self];
 ```
 
 **Delegate method for getting location :**
