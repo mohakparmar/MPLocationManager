@@ -29,10 +29,8 @@
 
 @protocol MPLocationDelegate <NSObject>
 
-@required
--(void)sendServiceSuccessBlock:(NSDictionary *)response;
-
 @optional
+-(void)sendServiceSuccessBlock:(NSDictionary *)response;
 -(void)SendLocation:(MPLocationObject *)location;
 -(void)SendError:(MPLocationStatus)ErrorCode;
 
