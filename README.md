@@ -17,11 +17,11 @@ MPLocationManager makes it easy to request both the device's current location, e
 
 MPLocationManager requires iOS 9.0 or later.
 
-**App Trasport Security**
+**App transport Security**
 
-As SDK contain service calls you need to add app trasport security in your application. 
+As SDK contain service calls you need to add app transport security in your application. 
 
-Read detail about trasport security : https://developers.google.com/admob/ios/app-transport-security
+Read detail about transport security : https://developers.google.com/admob/ios/app-transport-security
 
 ```
 <key>NSAppTransportSecurity</key>
