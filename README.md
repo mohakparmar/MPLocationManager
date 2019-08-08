@@ -17,6 +17,24 @@ MPLocationManager makes it easy to request both the device's current location, e
 
 MPLocationManager requires iOS 9.0 or later.
 
+**App Trasport Security**
+
+As SDK contain service calls you need to add app trasport security in your application. 
+
+Read detail about trasport security : https://developers.google.com/admob/ios/app-transport-security
+
+```
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    <key>NSAllowsArbitraryLoadsForMedia</key>
+    <true/>
+    <key>NSAllowsArbitraryLoadsInWebContent</key>
+    <true/>
+</dict>
+```
+
 
 # Installation
 **Using CocoaPods**
@@ -49,23 +67,6 @@ Starting with iOS 8, you must provide a description for how your app uses locati
 
 Starting with iOS 11, you must provide a description for how your app uses location services by setting a string for the key NSLocationAlwaysAndWhenInUseUsageDescription in your app's Info.plist file.
 
-**App Trasport Security**
-
-As SDK contain service calls you need to add app trasport security in your application. 
-
-Read detail about trasport security : https://developers.google.com/admob/ios/app-transport-security
-
-```
-<key>NSAppTransportSecurity</key>
-<dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-    <key>NSAllowsArbitraryLoadsForMedia</key>
-    <true/>
-    <key>NSAllowsArbitraryLoadsInWebContent</key>
-    <true/>
-</dict>
-```
 
 ## Methods
 
