@@ -15,7 +15,7 @@ MPLocationManager makes it easy to request both the device's current location, e
 
 ## Requirements
 
-MPLocationManager requires iOS 9.0 or later.
+MPLocationManager requires iOS 10.0 or later.
 
 **App transport Security**
 
@@ -39,8 +39,8 @@ Read detail about transport security : https://developers.google.com/admob/ios/a
 # Installation
 **Using CocoaPods**
 
-1) Add the pod MPLocationManager to your Podfile.
-2) pod 'MPLocationManager'
+1) Add the pod 'MPLocationManager', '1.1.0' to your Podfile.
+2) pod 'MPLocationManager', '1.1.0'
 3) Run pod install from Terminal, then open your app's .xcworkspace file to launch Xcode.
 4) import the MPLocationManager.h header.
 5) With use_frameworks! in your Podfile
