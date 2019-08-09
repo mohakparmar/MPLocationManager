@@ -133,7 +133,11 @@ typedef NS_ENUM(NSInteger, MPLocationStatus) {
     MPLocationStatusErrorAuthenticationError,
     /** Third Party Error. */
     MPLocationStatusErrorThirdPartyError,
-    /** Third Party Error. */
-    MPLocationStatusTripAlreadyStarted
+    /** Third Start Stop Error. */
+    MPLocationStatusTripAlreadyStarted,
+    /** API Configuration Pending */
+    MPLocationStatusPendingAPIConfiguration,
+    /** API Configuration is wrong */
+    MPLocationStatusWrongAPIConfiguration
 };
 

@@ -16,7 +16,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MPLocationViewController">
             <connections>
-                <outlet property="btnGeoCoding" destination="M3o-Cf-tKm" id="jvR-Iy-qSg"/>
                 <outlet property="btnStartUpdatingLocation" destination="sXd-VQ-bzE" id="0nw-7U-Bcv"/>
                 <outlet property="imgAccuracy" destination="SAB-gY-2jj" id="d5I-1K-Asl"/>
                 <outlet property="imgUpdateTime" destination="N3t-OO-L0Z" id="3sf-dc-LBk"/>
@@ -215,17 +214,6 @@
                         <action selector="btnStartUpdatingLocationClick:" destination="-1" eventType="touchUpInside" id="3AK-Ug-Ae9"/>
                     </connections>
                 </button>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="M3o-Cf-tKm">
-                    <rect key="frame" x="274" y="170" width="30" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <color key="tintColor" red="0.83529411760000005" green="0.0078431372550000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <state key="normal" backgroundImage="address">
-                        <color key="titleColor" red="0.83529411760000005" green="0.0078431372550000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </state>
-                    <connections>
-                        <action selector="btnGeoCodingClick:" destination="-1" eventType="touchUpInside" id="Y1k-f7-B8K"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <point key="canvasLocation" x="-887" y="326"/>
@@ -234,7 +222,6 @@
     <resources>
         <image name="Time" width="512" height="512"/>
         <image name="accuracy" width="420" height="420"/>
-        <image name="address" width="420" height="420"/>
         <image name="downarrow1" width="15" height="15"/>
     </resources>
 </document>

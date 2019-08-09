@@ -22,6 +22,7 @@
     self.navigationController.navigationBarHidden = YES;
     // @"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"
     [MPLocationManager sharedInstance].delegate = self;
+    [[MPLocationManager sharedInstance] setAPIConfiguration:@"http://204.141.208.30:82/api/expense-tracker/" UpdateMethodName:@"track/" CheckLocationStatusMethodName:@"has-trip-started/"];
     [[MPLocationManager sharedInstance] setName:[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"]];
     [[MPLocationManager sharedInstance] setToken:@"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"];
     [[MPLocationManager sharedInstance] checkLocationPermissionStatus];
@@ -86,6 +87,14 @@
         }
         case MPLocationStatusServicesNotDetermined: {
             _lblCurrentLocation.text = @"Awaiting for user permission.";
+            break;
+        }
+        case MPLocationStatusPendingAPIConfiguration: {
+            _lblCurrentLocation.text = @"API Configuration pending.";
+            break;
+        }
+        case MPLocationStatusWrongAPIConfiguration: {
+            _lblCurrentLocation.text = @"Wrong API Configuration.";
             break;
         }
         case MPLocationStatusServicesDenied: {
@@ -201,13 +210,6 @@
     }
 }
 
-- (IBAction)btnGeoCodingClick:(id)sender {
-    if (self.objLocation.MPLocation) {
-        [[MPLocationManager sharedInstance] getAddress:self.objLocation];
-    } else {
-        [self presentViewController:[MPUtility showAlertWithTitleAndMessage:@"Error" message:@"Please update the location object in order to fetch the address."] animated:YES completion:nil];
-    }
-}
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     [textField resignFirstResponder];

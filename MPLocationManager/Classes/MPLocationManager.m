@@ -51,6 +51,12 @@
 @property (nonatomic, retain) NSString *str_token;
 /* Start Stop Flag */
 @property (nonatomic, retain) NSString *str_start_stop_status;
+/* API URL */
+@property (nonatomic, retain) NSString *str_Url;
+/* Update Location method Name */
+@property (nonatomic, retain) NSString *str_update_location;
+/* Check Location Location method Name */
+@property (nonatomic, retain) NSString *str_check_location;
 
 @end
 
@@ -67,6 +73,12 @@ static id _sharedInstance;
         _sharedInstance = [[self alloc] init];
     });
     return _sharedInstance;
+}
+
+-(void)setAPIConfiguration:(NSString *)str_url UpdateMethodName:(NSString *)str_update_method CheckLocationStatusMethodName:(NSString *)str_check_status_method_name {
+    self.str_Url = str_url;
+    self.str_update_location = str_update_method;
+    self.str_check_location = str_check_status_method_name;
 }
 
 - (instancetype)init {
@@ -355,6 +367,8 @@ static id _sharedInstance;
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
     } else if ([self.str_name isEqualToString:@""]) {
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if (!self.str_Url.length || !self.str_update_location.length) {
+        [self.delegate SendError:MPLocationStatusPendingAPIConfiguration];
     } else {
         if ([_str_start_stop_status isEqualToString:@"Start"] || [_str_start_stop_status isEqualToString:@"Tracking"]) {
             [self WSForUpdateLocation:objMPLocation];
@@ -367,7 +381,7 @@ static id _sharedInstance;
 -(void)WSForUpdateLocation:(MPLocationObject *)objLocation {
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-    NSURL *url = [NSURL URLWithString:@"http://204.141.208.30:82/api/expense-tracker/track/"];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.str_Url, self.str_update_location]];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
@@ -391,24 +405,28 @@ static id _sharedInstance;
     //Create task
     NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         //Handle your response here
-        NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-        NSLog(@"%@",responseDict);
-        
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-        self->_str_start_stop_status = @"Tracking";
-        if ([httpResponse statusCode] == 500) {
-            NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
-            [self sendErrorCode:str_error dict:responseDict];
-            if ([str_error isEqualToString:@"50004"]) {
-                [self WSForStopUpdateLocation:objLocation];
-            }
+        if (data == nil) {
+            [self.delegate SendError:MPLocationStatusWrongAPIConfiguration];
         } else {
-            if ([httpResponse statusCode] == 401) {
-                [self.delegate SendError:MPLocationStatusErrorAuthenticationError];
+            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+            
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+            self->_str_start_stop_status = @"Tracking";
+            if ([httpResponse statusCode] == 500) {
+                NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+                [self sendErrorCode:str_error dict:responseDict];
+                if ([str_error isEqualToString:@"50004"]) {
+                    [self WSForStopUpdateLocation:objLocation];
+                }
+            } else {
+                if ([httpResponse statusCode] == 401) {
+                    [self.delegate SendError:MPLocationStatusErrorAuthenticationError];
+                }
+                [self.delegate sendServiceSuccessBlock:responseDict];
+                [self.delegate SendLocation:self->objMPLocation];
             }
-            [self.delegate sendServiceSuccessBlock:responseDict];
-            [self.delegate SendLocation:self->objMPLocation];
         }
+        
     }];
     [dataTask resume];
 }
@@ -416,7 +434,7 @@ static id _sharedInstance;
 -(void)WSForStopUpdateLocation:(MPLocationObject *)objLocation {
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-    NSURL *url = [NSURL URLWithString:@"http://204.141.208.30:82/api/expense-tracker/track/"];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.str_Url, self.str_update_location]];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
@@ -440,21 +458,25 @@ static id _sharedInstance;
     //Create task
     NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         //Handle your response here
-        self->_str_start_stop_status = @"Start";
-
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-
-        if ([httpResponse statusCode] == 500) {
-            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-            NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
-            [self sendErrorCode:str_error dict:responseDict];
+        if (data == nil) {
+            [self.delegate SendError:MPLocationStatusWrongAPIConfiguration];
         } else {
-            if ([httpResponse statusCode] == 401) {
-                [self.delegate SendError:MPLocationStatusErrorAuthenticationError];
+            self->_str_start_stop_status = @"Start";
+            
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+            
+            if ([httpResponse statusCode] == 500) {
+                NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+                NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+                [self sendErrorCode:str_error dict:responseDict];
+            } else {
+                if ([httpResponse statusCode] == 401) {
+                    [self.delegate SendError:MPLocationStatusErrorAuthenticationError];
+                }
+                NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+                [self.delegate sendServiceSuccessBlock:responseDict];
+                [self.delegate SendLocation:self->objMPLocation];
             }
-            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-            [self.delegate sendServiceSuccessBlock:responseDict];
-            [self.delegate SendLocation:self->objMPLocation];
         }
     }];
     [dataTask resume];
@@ -466,10 +488,12 @@ static id _sharedInstance;
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
     } else if ([self.str_name isEqualToString:@""]) {
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if (!self.str_Url.length || !self.str_check_location.length) {
+        [self.delegate SendError:MPLocationStatusPendingAPIConfiguration];
     } else {
         NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-        NSURL *url = [NSURL URLWithString:@"http://204.141.208.30:82/api/expense-tracker/has-trip-started/"];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.str_Url, self.str_check_location]];
         NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
         
         [urlRequest setHTTPMethod:@"GET"];
@@ -480,16 +504,21 @@ static id _sharedInstance;
         NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             //Handle your response here
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-            if ([httpResponse statusCode] == 500) {
-                NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
-                [self sendErrorCode:str_error dict:responseDict];
+            if (data == nil) {
+                [self.delegate SendError:MPLocationStatusWrongAPIConfiguration];
             } else {
-                NSString *str_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Status"]];
-                if ([str_code isEqualToString:@"1"]) {
-                    self.str_start_stop_status = @"Tracking";
-                    [self.delegate SendError:MPLocationStatusTripAlreadyStarted];
+                NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+                if ([httpResponse statusCode] == 500) {
+                    NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+                    [self sendErrorCode:str_error dict:responseDict];
+                } else {
+                    NSString *str_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Status"]];
+                    if ([str_code isEqualToString:@"1"]) {
+                        self.str_start_stop_status = @"Tracking";
+                        [self.delegate SendError:MPLocationStatusTripAlreadyStarted];
+                    }
                 }
+                [self.delegate sendServiceSuccessBlock:responseDict];
             }
         }];
         [dataTask resume];
@@ -539,36 +568,6 @@ static id _sharedInstance;
     return _currentLocation;
 }
 
--(void)getAddress:(MPLocationObject *)object {
-    CLGeocoder *ceo = [[CLGeocoder alloc]init];
-    [ceo reverseGeocodeLocation: object.MPLocation completionHandler:
-     ^(NSArray *placemarks, NSError *error) {
-         CLPlacemark *placemark = [placemarks objectAtIndex:0];
-         NSLog(@"placemark %@",placemark);
-         //String to hold address
-         NSString *locatedAt = [[placemark.addressDictionary valueForKey:@"FormattedAddressLines"] componentsJoinedByString:@", "];
-         NSLog(@"addressDictionary %@", placemark.addressDictionary);
-         
-         NSLog(@"placemark %@",placemark.region);
-         NSLog(@"placemark %@",placemark.country);  // Give Country Name
-         NSLog(@"placemark %@",placemark.locality); // Extract the city name
-         NSLog(@"location %@",placemark.name);
-         NSLog(@"location %@",placemark.ocean);
-         NSLog(@"location %@",placemark.postalCode);
-         NSLog(@"location %@",placemark.subLocality);
-         
-         NSLog(@"location %@",placemark.location);
-         //Print the location to console
-         NSLog(@"I am currently at %@",locatedAt);
-         
-         if (error == nil) {
-             object.MPPlaceMarks = placemarks;
-             [self.delegate SendError:MPLocationStatusAddressFetched];
-         } else {
-             [self.delegate SendError:MPLocationStatusErrorInAddressFetched];
-         }
-     }];
-}
     
 -(void)checkLocationPermissionStatus {
     NSLog(@"%d",[CLLocationManager authorizationStatus]);

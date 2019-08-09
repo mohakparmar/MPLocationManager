@@ -72,6 +72,9 @@
 /** To get current battery life */
 -(double)getCurrentBatteryLife;
 
+/** To configure api  */
+-(void)setAPIConfiguration:(NSString *)str_url UpdateMethodName:(NSString *)str_update_method CheckLocationStatusMethodName:(NSString *)str_check_status_method_name;
+
 -(void)checkLocationPermissionStatus;
 
 #pragma mark - To Get Currentlocation
@@ -91,7 +94,6 @@
 /** To check location update is started */
 - (void)checkLocationUpdateStarted;
 
--(void)getAddress:(MPLocationObject *)object;
 
 @property (nonatomic, retain) id <MPLocationDelegate>delegate;
 
