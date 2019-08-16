@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MPLocationManager'
-  s.version          = '1.1.2'
+  s.version          = '1.1.3'
   s.summary          = 'Simple library to get location updates and all relavent things.'
 
   s.homepage         = 'https://github.com/mohakparmar/MPLocationManager'
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.author           = { 'mohakparmar' => 'mohak@infoware.ws' }
   s.source           = { :git => 'https://github.com/mohakparmar/MPLocationManager.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'MPLocationManager/Classes/**/*'
   

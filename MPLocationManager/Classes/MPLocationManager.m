@@ -75,10 +75,10 @@ static id _sharedInstance;
     return _sharedInstance;
 }
 
--(void)setAPIConfiguration:(NSString *)str_url UpdateMethodName:(NSString *)str_update_method CheckLocationStatusMethodName:(NSString *)str_check_status_method_name {
+-(void)setAPIConfiguration:(NSString *)str_url TrackService:(NSString *)str_TrackService LocationStatusService:(NSString *)str_LocationStatusService {
     self.str_Url = str_url;
-    self.str_update_location = str_update_method;
-    self.str_check_location = str_check_status_method_name;
+    self.str_update_location = str_TrackService;
+    self.str_check_location = str_LocationStatusService;
 }
 
 - (instancetype)init {
@@ -611,6 +611,108 @@ static id _sharedInstance;
 
 -(void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
     [self.delegate SendError:MPLocationStatusPause];
+}
+
+- (void)getNewTokenFromAuthCode:(NSString *)str_url str_auth_code:(NSString *)str_auth_code {
+    
+    if ([str_auth_code isEqualToString:@""]) {
+        [self.delegate SendError:MPLocationStatusWrongAuthCode];
+    } else if (!str_url.length) {
+        [self.delegate SendError:MPLocationStatusPendingAPIConfiguration];
+    } else {
+        NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", str_url]];
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+        
+        [urlRequest setHTTPMethod:@"GET"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:str_auth_code forHTTPHeaderField:@"Authorization"];
+        
+        //Create task
+        NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            //Handle your response here
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+            if (data == nil) {
+                [self.delegate SendError:MPLocationStatusWrongAPIConfiguration];
+            } else {
+                NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+                if ([httpResponse statusCode] == 500) {
+                    NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+                    if ([str_error isEqualToString:@"50009"]) {
+                        NSString *str_error_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorState"]];
+                        if ([str_error_code isEqualToString:@"1"]) {
+                            [self.delegate SendFetchTokenStatus:MPLocationTokenApiStatusInvalidLogin Token:@""];
+                        } else if ([str_error_code isEqualToString:@"2"]) {
+                            [self.delegate SendFetchTokenStatus:MPLocationTokenApiStatusUserNotFound Token:@""];
+                        } else if ([str_error_code isEqualToString:@"3"]) {
+                            [self.delegate SendFetchTokenStatus:MPLocationTokenApiStatusInvalidAuthCode Token:@""];
+                        } else if ([str_error_code isEqualToString:@"4"]) {
+                            [self.delegate SendFetchTokenStatus:MPLocationTokenApiStatusInvalidTokenCodeFormat Token:@""];
+                        } else if ([str_error_code isEqualToString:@"5"]) {
+                            [self.delegate SendFetchTokenStatus:MPLocationTokenApiStatusTokenValidationIssue Token:@""];
+                        } else if ([str_error_code isEqualToString:@"6"]) {
+                            [self.delegate SendFetchTokenStatus:MPLocationTokenApiStatusTokenExpire Token:@""];
+                        } else if ([str_error_code isEqualToString:@"7"]) {
+                            [self.delegate SendFetchTokenStatus:MPLocationTokenApiStatusUserDeactivated Token:@""];
+                        }
+                    } else {
+                        [self sendErrorCode:str_error dict:responseDict];
+                    }
+                } else {
+                    NSString *token = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Data"]];
+                    [self.delegate SendFetchTokenStatus:MPLocationApiStatusSuccess Token:token];
+                }
+            }
+        }];
+        [dataTask resume];
+    }
+}
+
+- (void)getRedirectUrlWithToken:(NSString *)str_url str_token:(NSString *)str_token {
+    
+    if ([str_token isEqualToString:@""]) {
+        [self.delegate SendError:MPLocationStatuszErrorToken];
+    } else if (!str_url.length) {
+        [self.delegate SendError:MPLocationStatusPendingAPIConfiguration];
+    } else {
+        NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", str_url]];
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+        
+        [urlRequest setHTTPMethod:@"GET"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:str_token forHTTPHeaderField:@"Token"];
+        
+        //Create task
+        NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            //Handle your response here
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+            if (data == nil) {
+                [self.delegate SendError:MPLocationStatusWrongAPIConfiguration];
+            } else {
+                NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+                if ([httpResponse statusCode] == 500) {
+                    NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+                    if ([str_error isEqualToString:@"50009"]) {
+                        NSString *str_error_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorState"]];
+                        if ([str_error_code isEqualToString:@"8"]) {
+                            [self.delegate SendRedirectUrlWithStatus:MPLocationRedirectURLApiStatusRequestNotAuthorized RedirectUrl:@""];
+                        } else if ([str_error_code isEqualToString:@"4"]) {
+                            [self.delegate SendRedirectUrlWithStatus:MPLocationRedirectURLApiStatusInvalidToken RedirectUrl:@""];
+                        }
+                    } else {
+                        [self sendErrorCode:str_error dict:responseDict];
+                    }
+                } else {
+                    NSString *url = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Data"]];
+                    [self.delegate SendRedirectUrlWithStatus:MPLocationApiStatusSuccess RedirectUrl:url];
+                }
+            }
+        }];
+        [dataTask resume];
+    }
 }
 
 

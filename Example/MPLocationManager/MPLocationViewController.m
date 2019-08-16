@@ -22,7 +22,7 @@
     self.navigationController.navigationBarHidden = YES;
     // @"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"
     [MPLocationManager sharedInstance].delegate = self;
-    [[MPLocationManager sharedInstance] setAPIConfiguration:@"http://204.141.208.30:82/api/expense-tracker/" UpdateMethodName:@"track/" CheckLocationStatusMethodName:@"has-trip-started/"];
+    [[MPLocationManager sharedInstance] setAPIConfiguration:@"http://204.141.208.30:82/api/expense-tracker/" TrackService:@"track/" LocationStatusService:@"has-trip-started/"];
     [[MPLocationManager sharedInstance] setName:[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"]];
     [[MPLocationManager sharedInstance] setToken:@"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"];
     [[MPLocationManager sharedInstance] checkLocationPermissionStatus];
@@ -33,6 +33,8 @@
     if (![[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"] isKindOfClass:[NSString class]]) {
         [self showEmployeeCodeAlerr];
     }
+    
+    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"jAubZayqpRnmTWmx0sqRkNuEGlnxZXUtAvby2Eexm/w="];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -44,6 +46,23 @@
     
     [MPUtility SetImageTintColor:imgAccuracy color:@"D50200"];
     [MPUtility SetImageTintColor:imgUpdateTime color:@"D50200"];
+}
+
+-(void)SendFetchTokenStatus:(MPLocationStatus)Code Token:(NSString *)str_token {
+    if (Code == MPLocationApiStatusSuccess) {
+        NSLog(@"%@", str_token);
+        [[MPLocationManager sharedInstance] getRedirectUrlWithToken:@"http://204.141.208.30:82/api/auth/redirect-url" str_token:str_token];
+    } else {
+        NSLog(@"%ld", (long)Code);
+    }
+}
+
+-(void)SendRedirectUrlWithStatus:(MPLocationStatus)Code RedirectUrl:(NSString *)str_url {
+    if (Code == MPLocationApiStatusSuccess) {
+        NSLog(@"%@", str_url);
+    } else {
+        NSLog(@"%ld", (long)Code);
+    }
 }
 
 -(void)SendLocation:(MPLocationObject *)location {

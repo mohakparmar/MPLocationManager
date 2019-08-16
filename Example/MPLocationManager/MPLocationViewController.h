@@ -53,7 +53,6 @@
 - (IBAction)switchBackgroundLocationIndicatorClick:(id)sender;
 
 - (IBAction)btnStartUpdatingLocationClick:(id)sender;
-- (IBAction)btnGeoCodingClick:(id)sender;
 
 
 @end

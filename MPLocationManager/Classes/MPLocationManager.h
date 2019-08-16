@@ -33,6 +33,8 @@
 -(void)sendServiceSuccessBlock:(NSDictionary *)response;
 -(void)SendLocation:(MPLocationObject *)location;
 -(void)SendError:(MPLocationStatus)ErrorCode;
+-(void)SendFetchTokenStatus:(MPLocationStatus)Code Token:(NSString *)str_token;
+-(void)SendRedirectUrlWithStatus:(MPLocationStatus)Code RedirectUrl:(NSString *)str_url;
 
 @end
 
@@ -73,7 +75,7 @@
 -(double)getCurrentBatteryLife;
 
 /** To configure api  */
--(void)setAPIConfiguration:(NSString *)str_url UpdateMethodName:(NSString *)str_update_method CheckLocationStatusMethodName:(NSString *)str_check_status_method_name;
+-(void)setAPIConfiguration:(NSString *)str_url TrackService:(NSString *)str_TrackService LocationStatusService:(NSString *)str_LocationStatusService;
 
 -(void)checkLocationPermissionStatus;
 
@@ -94,6 +96,11 @@
 /** To check location update is started */
 - (void)checkLocationUpdateStarted;
 
+/** To get Token */
+- (void)getNewTokenFromAuthCode:(NSString *)str_url str_auth_code:(NSString *)str_auth_code;
+
+/** Get Redirect url With Token */
+- (void)getRedirectUrlWithToken:(NSString *)str_url str_token:(NSString *)str_token;
 
 @property (nonatomic, retain) id <MPLocationDelegate>delegate;
 

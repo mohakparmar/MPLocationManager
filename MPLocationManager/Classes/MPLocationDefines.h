@@ -138,6 +138,31 @@ typedef NS_ENUM(NSInteger, MPLocationStatus) {
     /** API Configuration Pending */
     MPLocationStatusPendingAPIConfiguration,
     /** API Configuration is wrong */
-    MPLocationStatusWrongAPIConfiguration
+    MPLocationStatusWrongAPIConfiguration,
+    /** Auth Code is wrong */
+    MPLocationStatusWrongAuthCode,
+    
+    /** Token Status Code Success */
+    MPLocationApiStatusSuccess,
+    /** Token Status Code Invalid Login */
+    MPLocationTokenApiStatusInvalidLogin,
+    /** Token Status Code User Not Found */
+    MPLocationTokenApiStatusUserNotFound,
+    /** Token Status Code Invalid Auth Code */
+    MPLocationTokenApiStatusInvalidAuthCode,
+    /** Token Status Code Invalid Auth Code Format */
+    MPLocationTokenApiStatusInvalidTokenCodeFormat,
+    /** Token Status Code Unable to validate token expiry */
+    MPLocationTokenApiStatusTokenValidationIssue,
+    /** Token Status Code Token Expire */
+    MPLocationTokenApiStatusTokenExpire,
+    /** Token Status Code User Deactivate */
+    MPLocationTokenApiStatusUserDeactivated,
+    
+    /** Redirect URL API Status Code Unauthorized request */
+    MPLocationRedirectURLApiStatusRequestNotAuthorized,
+    /** Redirect URL API Status Code Invalid Token */
+    MPLocationRedirectURLApiStatusInvalidToken
+
 };
 

@@ -329,7 +329,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		200885E79A32824767D34E3F3BAD8702 /* Release */ = {
+		10347FCAD43F750EE82285234EA528AD /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F68B5D8AA623437988CA4C2A273321 /* MPLocationManager.xcconfig */;
 			buildSettings = {
@@ -347,7 +347,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/MPLocationManager/MPLocationManager-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/MPLocationManager/MPLocationManager-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/MPLocationManager/MPLocationManager.modulemap";
 				PRODUCT_MODULE_NAME = MPLocationManager;
@@ -457,7 +457,7 @@
 			};
 			name = Debug;
 		};
-		DAB7690EBDDBDD0122E7F5CAB159FA3D /* Debug */ = {
+		B2A79BB9582B8DE6A0DF3F7AFD98868D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F68B5D8AA623437988CA4C2A273321 /* MPLocationManager.xcconfig */;
 			buildSettings = {
@@ -475,7 +475,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/MPLocationManager/MPLocationManager-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/MPLocationManager/MPLocationManager-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/MPLocationManager/MPLocationManager.modulemap";
 				PRODUCT_MODULE_NAME = MPLocationManager;
@@ -604,8 +604,8 @@
 		89A799DC04A3DB049CA5FCD5C23D48CC /* Build configuration list for PBXNativeTarget "MPLocationManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DAB7690EBDDBDD0122E7F5CAB159FA3D /* Debug */,
-				200885E79A32824767D34E3F3BAD8702 /* Release */,
+				B2A79BB9582B8DE6A0DF3F7AFD98868D /* Debug */,
+				10347FCAD43F750EE82285234EA528AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
