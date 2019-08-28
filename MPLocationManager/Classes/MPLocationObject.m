@@ -19,6 +19,18 @@
     obj.speed = location.speed;
     obj.battery = batteryLife;
     
+    if (location.speed < 0) {
+        obj.speed = 0;
+    }
+
+    if (accuracy < 0) {
+        obj.MPAccuracy = 0;
+    }
+
+    if (batteryLife < 0) {
+        obj.battery = 1;
+    }
+    
     return obj;
 }
 

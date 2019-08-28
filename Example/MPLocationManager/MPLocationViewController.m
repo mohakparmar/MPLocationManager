@@ -193,9 +193,6 @@
 - (IBAction)btnStartUpdatingLocationClick:(id)sender {
     
     if ([CLLocationManager locationServicesEnabled]){
-        
-        NSLog(@"Location Services Enabled");
-        
         if ([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
             
             UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Location Permission Denied" message:@"To re-enable, please go to Settings and turn on Location Service for this app." preferredStyle:UIAlertControllerStyleAlert];

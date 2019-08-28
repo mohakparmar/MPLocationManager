@@ -392,9 +392,11 @@ static id _sharedInstance;
     [dict setValue:[NSString stringWithFormat:@"%f", objLocation.battery] forKey:@"Battery"];
     [dict setValue:[NSString stringWithFormat:@"%ld", (long)objLocation.MPAccuracy] forKey:@"Accuracy"];
     [dict setValue:_str_start_stop_status forKey:@"Event"];
+    [dict setValue:@"IPHONE" forKey:@"Source"];
 
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    NSLog(@"%@ %@", url.absoluteString, dict);
     
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     [urlRequest setHTTPMethod:@"POST"];
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
@@ -409,7 +411,6 @@ static id _sharedInstance;
             [self.delegate SendError:MPLocationStatusWrongAPIConfiguration];
         } else {
             NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-            
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
             self->_str_start_stop_status = @"Tracking";
             if ([httpResponse statusCode] == 500) {
@@ -426,7 +427,6 @@ static id _sharedInstance;
                 [self.delegate SendLocation:self->objMPLocation];
             }
         }
-        
     }];
     [dataTask resume];
 }
@@ -445,6 +445,9 @@ static id _sharedInstance;
     [dict setValue:[NSString stringWithFormat:@"%f", objLocation.battery] forKey:@"Battery"];
     [dict setValue:[NSString stringWithFormat:@"%ld", (long)objLocation.MPAccuracy] forKey:@"Accuracy"];
     [dict setValue:@"Stop" forKey:@"Event"];
+    [dict setValue:@"IPHONE" forKey:@"Source"];
+
+    NSLog(@"%@ %@", url.absoluteString, dict);
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     
@@ -531,13 +534,27 @@ static id _sharedInstance;
     if ([str_code isEqualToString:@"50000"]) {
         [self.delegate SendError:MPLocationStatusErrorPermissionDenied];
     } else if ([str_code isEqualToString:@"50001"]) {
-        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+        NSString *str_error_code = [NSString stringWithFormat:@"%@", [dictionary valueForKey:@"ErrorState"]];
+        if ([str_error_code isEqualToString:@"9"]) {
+            [self.delegate SendError:MPLocationStatusErrorDataValidation];
+        } else if ([str_error_code isEqualToString:@"10"]) {
+            [self.delegate SendError:MPLocationTrackingApiStatusZeroLatLong];
+        } else {
+            [self.delegate SendError:MPLocationStatusErrorDataValidation];
+        }
     } else if ([str_code isEqualToString:@"50002"]) {
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
     } else if ([str_code isEqualToString:@"50003"]) {
         [self.delegate SendError:MPLocationStatusErrorDuplicateError];
     } else if ([str_code isEqualToString:@"50004"]) {
-        [self.delegate SendError:MPLocationStatusErrorDataNotFound];
+        NSString *str_error_code = [NSString stringWithFormat:@"%@", [dictionary valueForKey:@"ErrorState"]];
+        if ([str_error_code isEqualToString:@"1"]) {
+            [self.delegate SendError:MPLocationTrackingApiStatusTripAlreadyStarted];
+        } else if ([str_error_code isEqualToString:@"2"]) {
+            [self.delegate SendError:MPLocationTrackingApiStatusTripNotStarted];
+        } else {
+            [self.delegate SendError:MPLocationStatusErrorDataNotFound];
+        }
     } else if ([str_code isEqualToString:@"50005"]) {
         [self.delegate SendError:MPLocationStatusErrorDataNotFound];
     } else if ([str_code isEqualToString:@"50006"]) {

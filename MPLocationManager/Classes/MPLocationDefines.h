@@ -84,7 +84,6 @@ typedef NS_ENUM(NSInteger, MPLocationUpdateTime) {
     MPLocationUpdateTime5Seconds,
 };
 
-
 /** A status that will be passed in to the completion block of a location request. */
 typedef NS_ENUM(NSInteger, MPLocationStatus) {
     // These statuses will accompany a valid location.
@@ -162,7 +161,17 @@ typedef NS_ENUM(NSInteger, MPLocationStatus) {
     /** Redirect URL API Status Code Unauthorized request */
     MPLocationRedirectURLApiStatusRequestNotAuthorized,
     /** Redirect URL API Status Code Invalid Token */
-    MPLocationRedirectURLApiStatusInvalidToken
+    MPLocationRedirectURLApiStatusInvalidToken,
 
+    /** Tracking API Status Code Invalid Battery Accuracy Speed */
+    MPLocationTrackingApiStatusInvalidBatteryAccuracySpeed,
+    /** Tracking API Status Code Lat Long Zero */
+    MPLocationTrackingApiStatusZeroLatLong,
+    /** Tracking API Status Code Trip Already Started */
+    MPLocationTrackingApiStatusTripAlreadyStarted,
+    /** Tracking API Status Code Trip Not Started */
+    MPLocationTrackingApiStatusTripNotStarted
+
+    
 };
 
