@@ -24,9 +24,7 @@
     [MPLocationManager sharedInstance].delegate = self;
     [[MPLocationManager sharedInstance] setAPIConfiguration:@"http://204.141.208.30:82/api/expense-tracker/" TrackService:@"track/" LocationStatusService:@"has-trip-started/"];
     [[MPLocationManager sharedInstance] setName:[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"]];
-    [[MPLocationManager sharedInstance] setToken:@"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"];
     [[MPLocationManager sharedInstance] checkLocationPermissionStatus];
-    [[MPLocationManager sharedInstance] checkLocationUpdateStarted];
 //    double i = [[MPLocationManager sharedInstance] getCurrentBatteryLife];
 //    NSLog(@"%f", i);
     
@@ -34,7 +32,7 @@
         [self showEmployeeCodeAlerr];
     }
     
-    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"jAubZayqpRnmTWmx0sqRkNuEGlnxZXUtAvby2Eexm/w="];
+    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"VyheZ5gzbG2bmGX6KPYn/oLt6iLMyTJPAl0fW3pxxu8="];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -51,6 +49,8 @@
 -(void)SendFetchTokenStatus:(MPLocationStatus)Code Token:(NSString *)str_token {
     if (Code == MPLocationApiStatusSuccess) {
         NSLog(@"%@", str_token);
+        [[MPLocationManager sharedInstance] setToken:str_token];
+        [[MPLocationManager sharedInstance] checkLocationUpdateStarted];
         [[MPLocationManager sharedInstance] getRedirectUrlWithToken:@"http://204.141.208.30:82/api/auth/redirect-url" str_token:str_token];
     } else {
         NSLog(@"%ld", (long)Code);

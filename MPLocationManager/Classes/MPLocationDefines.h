@@ -18,6 +18,7 @@ static const NSTimeInterval kMPUpdateTimeStale10Minutes =             600.0;  //
 static const NSTimeInterval kMPUpdateTimeStale5Minutes =              300.0;  // in seconds
 static const NSTimeInterval kMPUpdateTimeStale1Minutes =              60.0;   // in seconds
 static const NSTimeInterval kMPUpdateTimeStale30Seconds =             30.0;   // in seconds
+static const NSTimeInterval kMPUpdateTimeStale10Seconds =             10.0;   // in seconds
 static const NSTimeInterval kMPUpdateTimeStale5Seconds =              5.0;    // in seconds
 
 typedef NS_ENUM(NSUInteger, MPAuthorizationRequests) {

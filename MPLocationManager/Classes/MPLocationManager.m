@@ -178,7 +178,7 @@ static id _sharedInstance;
     [self checkLocationPermissionStatus];
     
     [[MPLocationManager sharedInstance] SetMaxAccuracy:kMPHorizontalAccuracyModerate];
-    [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale5Minutes];
+    [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale10Seconds];
     [[MPLocationManager sharedInstance] setPausesLocationUpdatesAutomatically:NO];
     [[MPLocationManager sharedInstance] setBackgroundLocationUpdate:YES];
     [[MPLocationManager sharedInstance] setShowsBackgroundLocationIndicator:YES];
