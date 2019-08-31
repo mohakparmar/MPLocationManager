@@ -519,6 +519,8 @@ static id _sharedInstance;
                     if ([str_code isEqualToString:@"1"]) {
                         self.str_start_stop_status = @"Tracking";
                         [self.delegate SendError:MPLocationStatusTripAlreadyStarted];
+                    } else {
+                        self.str_start_stop_status = @"Start";
                     }
                 }
                 [self.delegate sendServiceSuccessBlock:responseDict];

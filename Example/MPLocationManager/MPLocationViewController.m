@@ -32,7 +32,7 @@
         [self showEmployeeCodeAlerr];
     }
     
-    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"VyheZ5gzbG2bmGX6KPYn/oLt6iLMyTJPAl0fW3pxxu8="];
+    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"VyheZ5gzbG2bmGX6KPYn/mWsTa1UiTf/cgqS9okxDbY="];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
