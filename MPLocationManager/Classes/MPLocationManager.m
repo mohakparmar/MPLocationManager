@@ -681,6 +681,7 @@ static id _sharedInstance;
                 } else {
                     NSString *token = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Data"]];
                     [self.delegate SendFetchTokenStatus:MPLocationApiStatusSuccess Token:token];
+                    self.str_token = token;
                 }
             }
         }];
