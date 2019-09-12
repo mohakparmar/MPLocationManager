@@ -176,18 +176,13 @@ static id _sharedInstance;
 -(void)StartUpdatingLocation:(id)delegate {
     self.delegate = delegate;
     [self checkLocationPermissionStatus];
-    
     [[MPLocationManager sharedInstance] SetMaxAccuracy:kMPHorizontalAccuracyModerate];
-    [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale10Seconds];
+    [[MPLocationManager sharedInstance] SetMaxUpdateTime:MPLocationUpdateTime5Minutes];
     [[MPLocationManager sharedInstance] setPausesLocationUpdatesAutomatically:NO];
     [[MPLocationManager sharedInstance] setBackgroundLocationUpdate:YES];
     [[MPLocationManager sharedInstance] setShowsBackgroundLocationIndicator:YES];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
-//    _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
-//    if (_mainCountDown) {
-//        _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
-//    }
 }
 
 -(void)timerCounter {
@@ -273,14 +268,13 @@ static id _sharedInstance;
     
     if ([self.timer isValid]) {
         [self.timer invalidate];
-        //_timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
-        if (_mainCountDown) {
-            self.nextLocationUpdateAvailable = (int)self.timeInterval;
-            [_timerForCounter invalidate];
-            _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
-        }
     }
-    
+    _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
+    if (_mainCountDown) {
+        self.nextLocationUpdateAvailable = (int)self.timeInterval;
+        [_timerForCounter invalidate];
+        _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
+    }
 }
 
 - (void)enableForceSend:(BOOL)forceSend {
@@ -292,7 +286,7 @@ static id _sharedInstance;
     if ([self.timer isValid] && _mainCountDown) {
         [self.timer invalidate];
         [_timerForCounter invalidate];
-     //   _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
         _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
         [self.delegate SendError:MPLocationStatusTimerStart];
     } else {
@@ -346,7 +340,7 @@ static id _sharedInstance;
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     CLLocation *mostRecentLocation = [locations lastObject];
     self.currentLocation = mostRecentLocation;
-    [self sendLocationObjectWithParameter];
+ //   [self sendLocationObjectWithParameter];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {

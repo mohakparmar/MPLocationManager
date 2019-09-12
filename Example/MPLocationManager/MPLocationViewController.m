@@ -20,19 +20,14 @@
     [super viewDidLoad];
 
     self.navigationController.navigationBarHidden = YES;
-    // @"eyJzIjoxMjUsImUiOiIwMDAxIiwidCI6ImRiOWU3OGQ1LTA1MDYtNDBhMC04ZDUyLTY2Njk0MTEzODIyZiJ9"
     [MPLocationManager sharedInstance].delegate = self;
     [[MPLocationManager sharedInstance] setAPIConfiguration:@"http://204.141.208.30:82/api/expense-tracker/" TrackService:@"track/" LocationStatusService:@"has-trip-started/"];
     [[MPLocationManager sharedInstance] setName:[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"]];
     [[MPLocationManager sharedInstance] checkLocationPermissionStatus];
-//    double i = [[MPLocationManager sharedInstance] getCurrentBatteryLife];
-//    NSLog(@"%f", i);
-    
     if (![[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"] isKindOfClass:[NSString class]]) {
         [self showEmployeeCodeAlerr];
     }
-    
-    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"VyheZ5gzbG2bmGX6KPYn/mWsTa1UiTf/cgqS9okxDbY="];
+    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"mTOstiI4PTzyR2xC1gKxN5CmvcgcklZaGXBLj5fOx2E="];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -67,13 +62,9 @@
 
 -(void)SendLocation:(MPLocationObject *)location {
     NSLog(@"%@", location);
-    
-   // btnGeoCoding.hidden = NO;
     _lblCurrentLocation.text = [NSString stringWithFormat:@"%@", location.MPLocation];
-    
     _objLocation = [[MPLocationObject alloc] init];
     _objLocation = location;
-    
     [self setLocationPin];
     [self zoomToLocation];
 }
@@ -191,7 +182,6 @@
 }
 
 - (IBAction)btnStartUpdatingLocationClick:(id)sender {
-    
     if ([CLLocationManager locationServicesEnabled]){
         if ([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
             
