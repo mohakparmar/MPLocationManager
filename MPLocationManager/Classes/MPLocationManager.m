@@ -183,6 +183,7 @@ static id _sharedInstance;
     [[MPLocationManager sharedInstance] setShowsBackgroundLocationIndicator:YES];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
+    [self performSelector:@selector(sendLocationObjectWithParameter) withObject:nil afterDelay:5.0];
 }
 
 -(void)timerCounter {
