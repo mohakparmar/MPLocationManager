@@ -300,6 +300,7 @@ static id _sharedInstance;
 - (void)StopUpdatingLocation {
     [_timer invalidate];
     [_timerForCounter invalidate];
+    objMPLocation = [MPLocationObject initWithCLLocation:self.currentLocation Accuracy:self.objCurrentAccuracy UpdateTime:self.objMPLocationTime battery:[self getCurrentBatteryLife]];
     [self WSForStopUpdateLocation:objMPLocation];
     [self.delegate SendError:MPLocationStatusTimerStop];
     [self.locationManager stopMonitoringSignificantLocationChanges];
