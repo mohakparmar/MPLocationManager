@@ -515,6 +515,11 @@ static id _sharedInstance;
                     if ([str_code isEqualToString:@"1"]) {
                         self.str_start_stop_status = @"Tracking";
                         [self.delegate SendError:MPLocationStatusTripAlreadyStarted];
+                        [[MPLocationManager sharedInstance] SetMaxAccuracy:kMPHorizontalAccuracyModerate];
+                        [[MPLocationManager sharedInstance] SetMaxUpdateTime:MPLocationUpdateTime5Minutes];
+                        [self.locationManager startMonitoringSignificantLocationChanges];
+                        [self.locationManager startUpdatingLocation];
+                        [self performSelector:@selector(sendLocationObjectWithParameter) withObject:nil afterDelay:1.0];
                     } else {
                         self.str_start_stop_status = @"Start";
                     }

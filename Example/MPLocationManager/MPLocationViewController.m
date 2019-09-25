@@ -27,7 +27,7 @@
     if (![[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"] isKindOfClass:[NSString class]]) {
         [self showEmployeeCodeAlerr];
     }
-    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"cSc9pB/83Nm+OrGjIFiqE93GskOawmXy339euZO9SUs="];
+    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"sXqGMcppvyE4i/5iLLzhH/uZmVh0ZNo8nzusEG0pSkQ="];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -91,7 +91,7 @@
 -(void)SendError:(MPLocationStatus)ErrorCode {
     switch (ErrorCode) {
         case MPLocationStatusTripAlreadyStarted: {
-            [[MPLocationManager sharedInstance] StartUpdatingLocation:self];
+           // [[MPLocationManager sharedInstance] StartUpdatingLocation:self];
             [btnStartUpdatingLocation setTitle:@"Stop Updating Location" forState:UIControlStateNormal];
             break;
         }
@@ -140,21 +140,9 @@
             NSLog(@"%@", obj);
             break;
         }
-        case MPLocationStatusErrorInAddressFetched: {
-            lblCountDown.text = @"Error in fetching address. Please try again.";
-            break;
-        }
-        case MPLocationStatusPause: {
-            [btnStartUpdatingLocation setTitle:@"Start Updating Location" forState:YES];
-            break;
-        }
         default:
             break;
     }
-}
-
--(void)sendTimerCount:(NSString *)str_count_down {
-    lblCountDown.text = [NSString stringWithFormat:@"Next location update in : %@", str_count_down];
 }
 
 - (IBAction)btnAccuracyInfoClick:(id)sender {
