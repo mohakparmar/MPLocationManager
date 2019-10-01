@@ -27,7 +27,8 @@
     if (![[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"] isKindOfClass:[NSString class]]) {
         [self showEmployeeCodeAlerr];
     }
-    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"sXqGMcppvyE4i/5iLLzhH/uZmVh0ZNo8nzusEG0pSkQ="];
+    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"10PBl9BfSQn9f6RpMhONmy+Ov1hL//wUnylFQFTOCco="];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated {

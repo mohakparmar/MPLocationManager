@@ -47,8 +47,6 @@
 @property (nonatomic, assign) BOOL mainCountDown;
 /* Variable for name */
 @property (nonatomic, retain) NSString *str_name;
-/* Token */
-@property (nonatomic, retain) NSString *str_token;
 /* Start Stop Flag */
 @property (nonatomic, retain) NSString *str_start_stop_status;
 /* API URL */
@@ -108,7 +106,8 @@ static id _sharedInstance;
 
 /** Set token */
 - (void)setToken:(NSString *)str_token {
-    self.str_token = str_token;
+    [[NSUserDefaults standardUserDefaults] setValue:str_token forKey:@"token"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 /** Set name */
@@ -183,7 +182,7 @@ static id _sharedInstance;
     [[MPLocationManager sharedInstance] setShowsBackgroundLocationIndicator:YES];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
-    [self performSelector:@selector(sendLocationObjectWithParameter) withObject:nil afterDelay:5.0];
+    [self performSelector:@selector(checkLocationBeforeSend) withObject:nil afterDelay:5.0];
 }
 
 -(void)timerCounter {
@@ -270,7 +269,7 @@ static id _sharedInstance;
     if ([self.timer isValid]) {
         [self.timer invalidate];
     }
-    _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(checkLocationBeforeSend) userInfo:nil repeats:YES];
     if (_mainCountDown) {
         self.nextLocationUpdateAvailable = (int)self.timeInterval;
         [_timerForCounter invalidate];
@@ -287,7 +286,7 @@ static id _sharedInstance;
     if ([self.timer isValid] && _mainCountDown) {
         [self.timer invalidate];
         [_timerForCounter invalidate];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(sendLocationObjectWithParameter) userInfo:nil repeats:YES];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(checkLocationBeforeSend) userInfo:nil repeats:YES];
         _timerForCounter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCounter) userInfo:nil repeats:YES];
         [self.delegate SendError:MPLocationStatusTimerStart];
     } else {
@@ -342,7 +341,10 @@ static id _sharedInstance;
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     CLLocation *mostRecentLocation = [locations lastObject];
     self.currentLocation = mostRecentLocation;
- //   [self sendLocationObjectWithParameter];
+    UIApplicationState state = [[UIApplication sharedApplication] applicationState];
+    if (state == UIApplicationStateInactive) {
+        [self checkLocationBeforeSend];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
@@ -359,7 +361,7 @@ static id _sharedInstance;
     objMPLocation = [MPLocationObject initWithCLLocation:self.currentLocation Accuracy:self.objCurrentAccuracy UpdateTime:self.objMPLocationTime battery:[self getCurrentBatteryLife]];
  //   [self.delegate SendLocation:objMPLocation];
     self.nextLocationUpdateAvailable = (int)self.timeInterval;
-    if ([self.str_token isEqualToString:@""]) {
+    if (![self checkValidToken]) {
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
     } else if ([self.str_name isEqualToString:@""]) {
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
@@ -372,6 +374,16 @@ static id _sharedInstance;
             [self WSForStopUpdateLocation:objMPLocation];
         }
     }
+}
+
+-(BOOL)checkValidToken {
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] isKindOfClass:[NSString class]]) {
+        NSString *token = [[NSUserDefaults standardUserDefaults] valueForKey:@"token"];
+        if (token.length) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 -(void)WSForUpdateLocation:(MPLocationObject *)objLocation {
@@ -397,7 +409,7 @@ static id _sharedInstance;
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
     [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [urlRequest setValue:self.str_token forHTTPHeaderField:@"Authorization"];
+    [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
     [urlRequest setHTTPBody:data];
     
     //Create task
@@ -451,7 +463,7 @@ static id _sharedInstance;
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
     [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [urlRequest setValue:self.str_token forHTTPHeaderField:@"Authorization"];
+    [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
     [urlRequest setHTTPBody:data];
     
     //Create task
@@ -483,7 +495,7 @@ static id _sharedInstance;
 
 - (void)checkLocationUpdateStarted {
     
-    if ([self.str_token isEqualToString:@""]) {
+    if (![self checkValidToken]) {
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
     } else if ([self.str_name isEqualToString:@""]) {
         [self.delegate SendError:MPLocationStatusErrorDataValidation];
@@ -497,7 +509,7 @@ static id _sharedInstance;
         
         [urlRequest setHTTPMethod:@"GET"];
         [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [urlRequest setValue:self.str_token forHTTPHeaderField:@"Authorization"];
+        [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
         
         //Create task
         NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -531,6 +543,48 @@ static id _sharedInstance;
     }
 }
 
+- (void)checkLocationBeforeSend {
+    if (![self checkValidToken]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if ([self.str_name isEqualToString:@""]) {
+        [self.delegate SendError:MPLocationStatusErrorDataValidation];
+    } else if (!self.str_Url.length || !self.str_check_location.length) {
+        [self.delegate SendError:MPLocationStatusPendingAPIConfiguration];
+    } else {
+        NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.str_Url, self.str_check_location]];
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+        
+        [urlRequest setHTTPMethod:@"GET"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
+        //Create task
+        NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            //Handle your response here
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+            if (data == nil) {
+                [self.delegate SendError:MPLocationStatusWrongAPIConfiguration];
+            } else {
+                NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+                if ([httpResponse statusCode] == 500) {
+                    NSString *str_error = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"ErrorNumber"]];
+                    [self sendErrorCode:str_error dict:responseDict];
+                } else {
+                    NSString *str_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Status"]];
+                    if ([str_code isEqualToString:@"1"]) {
+                        self.str_start_stop_status = @"Tracking";
+                        [self sendLocationObjectWithParameter];
+                    } else {
+                        self.str_start_stop_status = @"Start";
+                        [self sendLocationObjectWithParameter];
+                    }
+                }
+            }
+        }];
+        [dataTask resume];
+    }
+}
 
 -(void)sendErrorCode:(NSString *)str_code dict:(NSDictionary *)dictionary {
     
@@ -588,9 +642,8 @@ static id _sharedInstance;
     return _currentLocation;
 }
 
-    
 -(void)checkLocationPermissionStatus {
-    NSLog(@"%d",[CLLocationManager authorizationStatus]);
+ //   NSLog(@"%d",[CLLocationManager authorizationStatus]);
     if ([CLLocationManager locationServicesEnabled]){
         NSLog(@"Location Services Enabled");
         switch ([CLLocationManager authorizationStatus]) {
@@ -682,7 +735,8 @@ static id _sharedInstance;
                 } else {
                     NSString *token = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Data"]];
                     [self.delegate SendFetchTokenStatus:MPLocationApiStatusSuccess Token:token];
-                    self.str_token = token;
+                    [[NSUserDefaults standardUserDefaults] setValue:token forKey:@"token"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
                 }
             }
         }];
@@ -691,7 +745,6 @@ static id _sharedInstance;
 }
 
 - (void)getRedirectUrlWithToken:(NSString *)str_url str_token:(NSString *)str_token {
-    
     if ([str_token isEqualToString:@""]) {
         [self.delegate SendError:MPLocationStatuszErrorToken];
     } else if (!str_url.length) {
@@ -735,7 +788,6 @@ static id _sharedInstance;
         [dataTask resume];
     }
 }
-
 
 @end
 
