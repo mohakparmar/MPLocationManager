@@ -343,7 +343,8 @@ static id _sharedInstance;
     self.currentLocation = mostRecentLocation;
     UIApplicationState state = [[UIApplication sharedApplication] applicationState];
     if (state == UIApplicationStateInactive) {
-        [self checkLocationBeforeSend];
+        self.str_start_stop_status = @"Tracking";
+        [self sendLocationObjectWithParameter];
     }
 }
 
