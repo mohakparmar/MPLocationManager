@@ -172,7 +172,5 @@ typedef NS_ENUM(NSInteger, MPLocationStatus) {
     MPLocationTrackingApiStatusTripAlreadyStarted,
     /** Tracking API Status Code Trip Not Started */
     MPLocationTrackingApiStatusTripNotStarted
-
-    
 };
 

@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSArray *MPPlaceMarks;
 @property (nonatomic, assign) CLLocationSpeed speed;
 @property (nonatomic, assign) double battery;
+@property (nonatomic, assign) NSString *Status;
 
 +(MPLocationObject *)initWithCLLocation:(CLLocation *)location Accuracy:(MPLocationAccuracy)accuracy UpdateTime:(MPLocationUpdateTime)updateTime battery:(double)batteryLife;
     

@@ -1,5 +1,5 @@
 PODS:
-  - MPLocationManager (1.3.0)
+  - MPLocationManager (1.3.2)
 
 DEPENDENCIES:
   - MPLocationManager (from `/Users/hemantagrawal/Desktop/Mohak/MPLocationManager/MPLocationManager.podspec`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "/Users/hemantagrawal/Desktop/Mohak/MPLocationManager/MPLocationManager.podspec"
 
 SPEC CHECKSUMS:
-  MPLocationManager: 6cc9563bc875c05561cf1b90abe157f283e6bbe7
+  MPLocationManager: eb51c841d202a70e7c2c250395dcf19e705e545d
 
 PODFILE CHECKSUM: 5f03edb0715e873240bef9559073eae6e8d38647
 

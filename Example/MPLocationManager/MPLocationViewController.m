@@ -27,7 +27,7 @@
     if (![[[NSUserDefaults standardUserDefaults]  valueForKey:@"name"] isKindOfClass:[NSString class]]) {
         [self showEmployeeCodeAlerr];
     }
-    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"10PBl9BfSQn9f6RpMhONmy+Ov1hL//wUnylFQFTOCco="];
+    [[MPLocationManager sharedInstance] getNewTokenFromAuthCode:@"http://204.141.208.30:82/api/auth/token" str_auth_code:@"BH9HRyh76PHqSrdCWfcisoVTAPLlk0DYtoObn/MyY94="];
 
 }
 
@@ -92,7 +92,6 @@
 -(void)SendError:(MPLocationStatus)ErrorCode {
     switch (ErrorCode) {
         case MPLocationStatusTripAlreadyStarted: {
-           // [[MPLocationManager sharedInstance] StartUpdatingLocation:self];
             [btnStartUpdatingLocation setTitle:@"Stop Updating Location" forState:UIControlStateNormal];
             break;
         }
@@ -173,7 +172,6 @@
 - (IBAction)btnStartUpdatingLocationClick:(id)sender {
     if ([CLLocationManager locationServicesEnabled]){
         if ([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
-            
             UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Location Permission Denied" message:@"To re-enable, please go to Settings and turn on Location Service for this app." preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction* yesButton = [UIAlertAction actionWithTitle:@"Setting" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                 NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
@@ -187,6 +185,7 @@
             [self presentViewController:alert animated:YES completion:nil];
         } else {
             if ([btnStartUpdatingLocation.currentTitle isEqualToString:@"Start Updating Location"]) {
+                [[MPLocationManager sharedInstance] SetMaxUpdateTime:kMPUpdateTimeStale5Seconds];
                 [[MPLocationManager sharedInstance] StartUpdatingLocation:self];
                 [btnStartUpdatingLocation setTitle:@"Stop Updating Location" forState:UIControlStateNormal];
             } else {
@@ -196,6 +195,8 @@
         }
     } else {
         if ([btnStartUpdatingLocation.currentTitle isEqualToString:@"Start Updating Location"]) {
+            [[MPLocationManager sharedInstance] setBackgroundLocationUpdate:YES];
+            [[MPLocationManager sharedInstance] setPausesLocationUpdatesAutomatically:NO];
             [[MPLocationManager sharedInstance] StartUpdatingLocation:self];
             [btnStartUpdatingLocation setTitle:@"Stop Updating Location" forState:UIControlStateNormal];
         } else {
