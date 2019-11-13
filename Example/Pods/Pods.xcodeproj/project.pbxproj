@@ -7,17 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		41A277274A470244A52A73E76C8B0D17 /* MPLocationDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = E6320AAAF0B3FE2FA0E5093631468440 /* MPLocationDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5A590562B2904E75729F7D85F2E2B5AA /* MPLocationManager-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EDB4A4F835EB003576081E1D606A030 /* MPLocationManager-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5BD13E63610CE80362A5A1AB2DE1C6FC /* MPLocationManager-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CAD7FD9EBD25B99271E9F2C22D8515 /* MPLocationManager-dummy.m */; };
 		65F2A58A0B77E39D267C2CF93034E055 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D5121C2F7771E4574B7F4EE812E688 /* CoreLocation.framework */; };
-		7FFF460CA1AF705171A4E3A8731335BB /* MPLocationObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8ED8818F734620D9B13980D2914F90E1 /* MPLocationObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		89B31BB0B0AF84C084C0488F7EF66BF9 /* MPLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 07905EF28725B0D60C490558F929BE9F /* MPLocationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		960A3EBCF77D0F0DF22C9C4EE4297CEE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704F133DA29FC3164C6D757146453CC5 /* Foundation.framework */; };
-		9B0B9155921972FCB07113E5FFEB6326 /* MPLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 67AB458897F61BAA6204B12D93A8D158 /* MPLocationManager.m */; };
 		B0116A99FB669BE66CDB08F444D94200 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 704F133DA29FC3164C6D757146453CC5 /* Foundation.framework */; };
+		BB458CEF237C3E5B009F0F3D /* MPLocationObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BB458CEA237C3E5A009F0F3D /* MPLocationObject.h */; };
+		BB458CF0237C3E5B009F0F3D /* MPLocationObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BB458CEB237C3E5B009F0F3D /* MPLocationObject.m */; };
+		BB458CF1237C3E5B009F0F3D /* MPLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BB458CEC237C3E5B009F0F3D /* MPLocationManager.h */; };
+		BB458CF2237C3E5B009F0F3D /* MPLocationDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = BB458CED237C3E5B009F0F3D /* MPLocationDefines.h */; };
+		BB458CF3237C3E5B009F0F3D /* MPLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB458CEE237C3E5B009F0F3D /* MPLocationManager.m */; };
 		C74383F93F4D21E619B2738316754F32 /* Pods-MPLocationManager_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B6F75A623155308CFAE5A56F364C1649 /* Pods-MPLocationManager_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F2101F65245360508F2E68217D5A64BB /* MPLocationObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B4ED2B3EFF3B6071C93FFF9D65FA090 /* MPLocationObject.m */; };
 		F74CCA312B7A83EAA624A9B64E8385D1 /* Pods-MPLocationManager_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BB4BFB5AE75EED8E03F4FB577FA7EA45 /* Pods-MPLocationManager_Example-dummy.m */; };
 /* End PBXBuildFile section */
 
@@ -32,34 +30,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0133612761BD7E2D76CEE15E45B3DE08 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		07905EF28725B0D60C490558F929BE9F /* MPLocationManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MPLocationManager.h; path = MPLocationManager/Classes/MPLocationManager.h; sourceTree = "<group>"; };
 		25C031ACFC137F885A8E1E66928F7105 /* Pods-MPLocationManager_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-MPLocationManager_Example.modulemap"; sourceTree = "<group>"; };
-		2B4ED2B3EFF3B6071C93FFF9D65FA090 /* MPLocationObject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MPLocationObject.m; path = MPLocationManager/Classes/MPLocationObject.m; sourceTree = "<group>"; };
 		2F25C7A0FE75B88C84FD453BEE10552D /* Pods-MPLocationManager_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MPLocationManager_Example.release.xcconfig"; sourceTree = "<group>"; };
-		423DF2732576DDE0357CB51E0FBB618C /* MPLocationManager.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = MPLocationManager.modulemap; sourceTree = "<group>"; };
 		49D5121C2F7771E4574B7F4EE812E688 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
-		4C0A5F441B490416D7401950CD319AB9 /* MPLocationManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = MPLocationManager.framework; path = MPLocationManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		67AB458897F61BAA6204B12D93A8D158 /* MPLocationManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MPLocationManager.m; path = MPLocationManager/Classes/MPLocationManager.m; sourceTree = "<group>"; };
+		4C0A5F441B490416D7401950CD319AB9 /* MPLocationManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPLocationManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BA47348EBC3C1C9273036C107744AA4 /* Pods-MPLocationManager_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MPLocationManager_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		704F133DA29FC3164C6D757146453CC5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		7C382BE0DB76A0379557A580E348E361 /* MPLocationManager-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "MPLocationManager-Info.plist"; sourceTree = "<group>"; };
 		8026888BCDEBD822DFAA2F3CEB3C38F6 /* Pods-MPLocationManager_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MPLocationManager_Example-Info.plist"; sourceTree = "<group>"; };
-		8ED8818F734620D9B13980D2914F90E1 /* MPLocationObject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MPLocationObject.h; path = MPLocationManager/Classes/MPLocationObject.h; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9EDB4A4F835EB003576081E1D606A030 /* MPLocationManager-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MPLocationManager-umbrella.h"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B6F75A623155308CFAE5A56F364C1649 /* Pods-MPLocationManager_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-MPLocationManager_Example-umbrella.h"; sourceTree = "<group>"; };
-		B72539C2C2F2615B3FBBF76AD0FFEE26 /* MPLocationManager-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MPLocationManager-prefix.pch"; sourceTree = "<group>"; };
-		B8F68B5D8AA623437988CA4C2A273321 /* MPLocationManager.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MPLocationManager.xcconfig; sourceTree = "<group>"; };
+		BB458CEA237C3E5A009F0F3D /* MPLocationObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPLocationObject.h; path = ../../../MPLocationManager/Classes/MPLocationObject.h; sourceTree = "<group>"; };
+		BB458CEB237C3E5B009F0F3D /* MPLocationObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPLocationObject.m; path = ../../../MPLocationManager/Classes/MPLocationObject.m; sourceTree = "<group>"; };
+		BB458CEC237C3E5B009F0F3D /* MPLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPLocationManager.h; path = ../../../MPLocationManager/Classes/MPLocationManager.h; sourceTree = "<group>"; };
+		BB458CED237C3E5B009F0F3D /* MPLocationDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPLocationDefines.h; path = ../../../MPLocationManager/Classes/MPLocationDefines.h; sourceTree = "<group>"; };
+		BB458CEE237C3E5B009F0F3D /* MPLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPLocationManager.m; path = ../../../MPLocationManager/Classes/MPLocationManager.m; sourceTree = "<group>"; };
 		BB4BFB5AE75EED8E03F4FB577FA7EA45 /* Pods-MPLocationManager_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-MPLocationManager_Example-dummy.m"; sourceTree = "<group>"; };
 		C1BDA821831C0D99C4E3D48C7DE68C2D /* Pods-MPLocationManager_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-MPLocationManager_Example-frameworks.sh"; sourceTree = "<group>"; };
 		C5ECB2AE9DB220BBDDBC906C84E5FCB4 /* Pods-MPLocationManager_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MPLocationManager_Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		C8CAD7FD9EBD25B99271E9F2C22D8515 /* MPLocationManager-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MPLocationManager-dummy.m"; sourceTree = "<group>"; };
-		D06A2F3B6DA3262F61D1F57BC0642C3D /* MPLocationManager.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = MPLocationManager.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		E6320AAAF0B3FE2FA0E5093631468440 /* MPLocationDefines.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MPLocationDefines.h; path = MPLocationManager/Classes/MPLocationDefines.h; sourceTree = "<group>"; };
-		ECE5A75CA67242179621075BD8B23C72 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
 		F5865F3A90A500E6467961B39DB125C7 /* Pods-MPLocationManager_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-MPLocationManager_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		F925B430DC91C11AD554AACB1215B895 /* Pods_MPLocationManager_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_MPLocationManager_Example.framework; path = "Pods-MPLocationManager_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F925B430DC91C11AD554AACB1215B895 /* Pods_MPLocationManager_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MPLocationManager_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,20 +80,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		17109B9B70525998EF98106B6FB347AD /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				423DF2732576DDE0357CB51E0FBB618C /* MPLocationManager.modulemap */,
-				B8F68B5D8AA623437988CA4C2A273321 /* MPLocationManager.xcconfig */,
-				C8CAD7FD9EBD25B99271E9F2C22D8515 /* MPLocationManager-dummy.m */,
-				7C382BE0DB76A0379557A580E348E361 /* MPLocationManager-Info.plist */,
-				B72539C2C2F2615B3FBBF76AD0FFEE26 /* MPLocationManager-prefix.pch */,
-				9EDB4A4F835EB003576081E1D606A030 /* MPLocationManager-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/MPLocationManager";
-			sourceTree = "<group>";
-		};
 		3CB37F1A5DCA113494340185B9FC9AD5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,21 +88,6 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
-		};
-		6277F5522DEC62CF57259072BD59A5A8 /* MPLocationManager */ = {
-			isa = PBXGroup;
-			children = (
-				E6320AAAF0B3FE2FA0E5093631468440 /* MPLocationDefines.h */,
-				07905EF28725B0D60C490558F929BE9F /* MPLocationManager.h */,
-				67AB458897F61BAA6204B12D93A8D158 /* MPLocationManager.m */,
-				8ED8818F734620D9B13980D2914F90E1 /* MPLocationObject.h */,
-				2B4ED2B3EFF3B6071C93FFF9D65FA090 /* MPLocationObject.m */,
-				CAE80602BD83CA1C19AE40C7AA5DDC71 /* Pod */,
-				17109B9B70525998EF98106B6FB347AD /* Support Files */,
-			);
-			name = MPLocationManager;
-			path = /Users/hemantagrawal/Desktop/Mohak/MPLocationManager;
-			sourceTree = "<absolute>";
 		};
 		6C381D62E5C6B87081FA76B02023358C /* Pods-MPLocationManager_Example */ = {
 			isa = PBXGroup;
@@ -149,7 +109,7 @@
 		97CFFA82B1871440959C1E0324B9F8C5 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6277F5522DEC62CF57259072BD59A5A8 /* MPLocationManager */,
+				BB458CE9237C3E4B009F0F3D /* MPLocationManager */,
 			);
 			name = "Development Pods";
 			sourceTree = "<group>";
@@ -162,6 +122,18 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
+		BB458CE9237C3E4B009F0F3D /* MPLocationManager */ = {
+			isa = PBXGroup;
+			children = (
+				BB458CED237C3E5B009F0F3D /* MPLocationDefines.h */,
+				BB458CEC237C3E5B009F0F3D /* MPLocationManager.h */,
+				BB458CEE237C3E5B009F0F3D /* MPLocationManager.m */,
+				BB458CEA237C3E5A009F0F3D /* MPLocationObject.h */,
+				BB458CEB237C3E5B009F0F3D /* MPLocationObject.m */,
+			);
+			path = MPLocationManager;
+			sourceTree = "<group>";
+		};
 		BE10176CFFB3E8F58E75EED762C767CE /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,16 +141,6 @@
 				704F133DA29FC3164C6D757146453CC5 /* Foundation.framework */,
 			);
 			name = iOS;
-			sourceTree = "<group>";
-		};
-		CAE80602BD83CA1C19AE40C7AA5DDC71 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				ECE5A75CA67242179621075BD8B23C72 /* LICENSE */,
-				D06A2F3B6DA3262F61D1F57BC0642C3D /* MPLocationManager.podspec */,
-				0133612761BD7E2D76CEE15E45B3DE08 /* README.md */,
-			);
-			name = Pod;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -207,10 +169,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41A277274A470244A52A73E76C8B0D17 /* MPLocationDefines.h in Headers */,
-				5A590562B2904E75729F7D85F2E2B5AA /* MPLocationManager-umbrella.h in Headers */,
-				89B31BB0B0AF84C084C0488F7EF66BF9 /* MPLocationManager.h in Headers */,
-				7FFF460CA1AF705171A4E3A8731335BB /* MPLocationObject.h in Headers */,
+				BB458CF1237C3E5B009F0F3D /* MPLocationManager.h in Headers */,
+				BB458CF2237C3E5B009F0F3D /* MPLocationDefines.h in Headers */,
+				BB458CEF237C3E5B009F0F3D /* MPLocationObject.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,9 +264,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5BD13E63610CE80362A5A1AB2DE1C6FC /* MPLocationManager-dummy.m in Sources */,
-				9B0B9155921972FCB07113E5FFEB6326 /* MPLocationManager.m in Sources */,
-				F2101F65245360508F2E68217D5A64BB /* MPLocationObject.m in Sources */,
+				BB458CF0237C3E5B009F0F3D /* MPLocationObject.m in Sources */,
+				BB458CF3237C3E5B009F0F3D /* MPLocationManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,7 +291,6 @@
 /* Begin XCBuildConfiguration section */
 		10347FCAD43F750EE82285234EA528AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F68B5D8AA623437988CA4C2A273321 /* MPLocationManager.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -415,8 +374,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -459,7 +417,6 @@
 		};
 		B2A79BB9582B8DE6A0DF3F7AFD98868D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F68B5D8AA623437988CA4C2A273321 /* MPLocationManager.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;

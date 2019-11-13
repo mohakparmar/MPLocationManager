@@ -106,7 +106,7 @@ static id _sharedInstance;
 
 /** Set token */
 - (void)setToken:(NSString *)str_token {
-    [[NSUserDefaults standardUserDefaults] setValue:str_token forKey:@"token"];
+    [[NSUserDefaults standardUserDefaults] setValue:str_token forKey:@"MPtoken"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -293,8 +293,8 @@ static id _sharedInstance;
 
 /** To Stop Updating Location */
 - (void)StopUpdatingLocation {
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"bglocation"] isEqualToString:@"1"]) {
-        [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"bglocation"];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"MPbglocation"] isEqualToString:@"1"]) {
+        [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"MPbglocation"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         objMPLocation = [MPLocationObject initWithCLLocation:self.currentLocation Accuracy:self.objCurrentAccuracy UpdateTime:self.objMPLocationTime battery:[self getCurrentBatteryLife]];
@@ -312,7 +312,7 @@ static id _sharedInstance;
 - (void)setBackgroundLocationUpdate:(BOOL)enabled {
     if (@available(iOS 9, *)) {
         _locationManager.allowsBackgroundLocationUpdates = enabled;
-        [[NSUserDefaults standardUserDefaults] setValue:enabled?@"1":@"0" forKey:@"bglocation"];
+        [[NSUserDefaults standardUserDefaults] setValue:enabled?@"1":@"0" forKey:@"MPbglocation"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         if (!enabled) {
             [_timer invalidate];
@@ -380,8 +380,8 @@ static id _sharedInstance;
 }
 
 -(BOOL)checkValidToken {
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] isKindOfClass:[NSString class]]) {
-        NSString *token = [[NSUserDefaults standardUserDefaults] valueForKey:@"token"];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"MPtoken"] isKindOfClass:[NSString class]]) {
+        NSString *token = [[NSUserDefaults standardUserDefaults] valueForKey:@"MPtoken"];
         if (token.length) {
             return YES;
         }
@@ -412,7 +412,7 @@ static id _sharedInstance;
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
     [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
+    [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"MPtoken"] forHTTPHeaderField:@"Authorization"];
     [urlRequest setHTTPBody:data];
     
     //Create task
@@ -467,7 +467,7 @@ static id _sharedInstance;
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     NSString *postLength=[NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
     [urlRequest setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
+    [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"MPtoken"] forHTTPHeaderField:@"Authorization"];
     [urlRequest setHTTPBody:data];
     
     //Create task
@@ -512,7 +512,7 @@ static id _sharedInstance;
         
         [urlRequest setHTTPMethod:@"GET"];
         [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
+        [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"MPtoken"] forHTTPHeaderField:@"Authorization"];
         
         //Create task
         NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -527,7 +527,7 @@ static id _sharedInstance;
                     [self sendErrorCode:str_error dict:responseDict];
                 } else {
                     NSString *str_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Status"]];
-                    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"bglocation"] isEqualToString:@"1"]) {
+                    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"MPbglocation"] isEqualToString:@"1"]) {
                         [[MPLocationManager sharedInstance] setBackgroundLocationUpdate:YES];
                         [[MPLocationManager sharedInstance] setPausesLocationUpdatesAutomatically:NO];
                         [self startPauseUpdate];
@@ -570,7 +570,7 @@ static id _sharedInstance;
         
         [urlRequest setHTTPMethod:@"GET"];
         [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"token"] forHTTPHeaderField:@"Authorization"];
+        [urlRequest setValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"MPtoken"] forHTTPHeaderField:@"Authorization"];
         //Create task
         NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             //Handle your response here
@@ -584,7 +584,7 @@ static id _sharedInstance;
                     [self sendErrorCode:str_error dict:responseDict];
                 } else {
                     NSString *str_code = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Status"]];
-                    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"bglocation"] isEqualToString:@"1"]) {
+                    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"MPbglocation"] isEqualToString:@"1"]) {
                         self.str_start_stop_status = @"Tracking";
                         [self sendLocationObjectWithParameter];
                     } else {
@@ -751,7 +751,7 @@ static id _sharedInstance;
                 } else {
                     NSString *token = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"Data"]];
                     [self.delegate SendFetchTokenStatus:MPLocationApiStatusSuccess Token:token];
-                    [[NSUserDefaults standardUserDefaults] setValue:token forKey:@"token"];
+                    [[NSUserDefaults standardUserDefaults] setValue:token forKey:@"MPtoken"];
                     [[NSUserDefaults standardUserDefaults] synchronize];
                 }
             }
@@ -773,7 +773,7 @@ static id _sharedInstance;
         
         [urlRequest setHTTPMethod:@"GET"];
         [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [urlRequest setValue:str_token forHTTPHeaderField:@"Token"];
+        [urlRequest setValue:str_token forHTTPHeaderField:@"MPtoken"];
         
         //Create task
         NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
