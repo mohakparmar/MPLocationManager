@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MPLocationManager'
-  s.version          = '1.3.3'
+  s.version          = '1.3.4'
   s.summary          = 'Simple library to get location updates and all relavent things.'
 
   s.homepage         = 'https://github.com/mohakparmar/MPLocationManager'
