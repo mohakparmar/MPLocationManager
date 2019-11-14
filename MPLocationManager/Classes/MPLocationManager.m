@@ -773,7 +773,7 @@ static id _sharedInstance;
         
         [urlRequest setHTTPMethod:@"GET"];
         [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [urlRequest setValue:str_token forHTTPHeaderField:@"MPtoken"];
+        [urlRequest setValue:str_token forHTTPHeaderField:@"Authorization"];
         
         //Create task
         NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
